@@ -5,7 +5,7 @@ eatsApp.controller('UserController', function($scope, $window, UserFactory) {
         UserFactory.loginUser()
         .then( (data) => {
             let currentUser = data.user.uid;
-            $window.location.href = '#!/startsession';
+            $window.location.href = '#!/user/suggest';
         });
     };
 });

@@ -1,47 +1,45 @@
 'use strict';
 
 eatsApp.controller('SuggestionsUserController', function ($scope, $window, $routeParams, UserFactory, SuggestionsFactory, GoogleCreds) {
-
-	let userLoc = {
+	
+	$scope.userLoc = {
       lat: 0,
       lng: 0
     };
 
+    let suggestionsArray = [];
+
 	$scope.getUserLocation = () => {
-		//either need to promise-ofy this so that I can make the get suggestions a .then... or else need to call that from here... then the "make suggestion" will bring up the display of a random thing, rather than fetch stuff
-		console.log("get user location button clicked");
 		if (navigator.geolocation) {
-		  console.log("navigator?", navigator.geolocation);
 	      navigator.geolocation.getCurrentPosition(function(position) {
-		    userLoc = {
+		    $scope.userLoc = {
 		      lat: position.coords.latitude,
 		      lng: position.coords.longitude
 		    };
-		    console.log("userLocation?", userLoc);
-		    makeSuggestionsArray();
+		    $scope.makeSuggestionsArray();
 		  });
-
-		console.log("userLoc?", userLoc);
-		$window.location.href = "#!/user/suggest";
-	    return userLoc;
 		} else {
 			console.log("There was a problem with geolocation");
 		}
 
 	};
 
-	function makeSuggestionsArray() {
-		console.log("userLoc?", userLoc);
-		SuggestionsFactory.getSuggestions(userLoc.lat, userLoc.lng, 10000)
+	$scope.makeSuggestionsArray = () => {
+		SuggestionsFactory.fetchAPISuggestions($scope.userLoc.lat, $scope.userLoc.lng, 8050)
 		.then( (results) => {
 		  	console.log("results!", results);
-		});
-	}
+		  	suggestionsArray = results;
+		  		console.log("suggestions array", suggestionsArray);
+		  		return suggestionsArray;
+		  	});
+		};
 
 	$scope.showASuggestion = () => {
+		console.log("suggestions array", suggestionsArray);
+		$scope.currentSuggestion = suggestionsArray.slice(0,1)[0];
+		console.log("current suggestion", $scope.currentSuggestion);
+		//let photomaxwidth = $scope.currentSuggestion.photos[0].width;
+		//let photoref = $scope.currentSuggestion.photos[0].photo_reference;
+		//SuggestionsFactory.getOnePhoto(photomaxwidth, photoref);
 	  };
-		
-
-
-
 });

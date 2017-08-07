@@ -1,4 +1,15 @@
-<h1>SUGGESTION DISPLAY SCREEN</h1>
+<h1>START NEW SESSION SCREEN AND ALSO SHOW EACH SUGGESTION</h1>
+<!-- maybe get location on load and then use a button to kick off suggestions? -->
+<button ng-click="getUserLocation()">Get My Location</button>
 
-		<button ng-click="">Make a suggestion!</button>
+		<button ng-click="showASuggestion()">Make a suggestion!</button>
 		<p>Suggestions should go here:</p>
+		<div>
+			<h1>{{currentSuggestion.name}}</h1>
+			<!-- need a separate API call for photo ref -->
+			<p>Price level: {{currentSuggestion.price_level}}</p>
+			<p>Avg. Rating: {{currentSuggestion.rating}}</p>
+			<p>Address: {{currentSuggestion.vicinity}}</p>
+
+
+		</div>

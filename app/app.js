@@ -22,10 +22,6 @@ eatsApp.config(($routeProvider)=>{
         templateUrl: 'templates/login.html',
         controller: 'UserController'
     })
-    .when('/startsession', {
-        templateUrl: 'templates/start-new.html',
-        controller: 'SuggestionsUserController'
-    })
     .when('/guest/suggest', {
         templateUrl: 'templates/suggest.html',
         controller: ''
