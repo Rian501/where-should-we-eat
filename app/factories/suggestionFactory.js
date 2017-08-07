@@ -17,7 +17,7 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds) {
 			//opennow parameter auto filters results for currently open stuff
 			//type restaurant can be changed...
 			//keyword can also be adjusted for filtering..?
-			$http.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${userLat},${userLon}&radius=${radiusM}&opennow=true&type=restaurant&keyword=food&key=${API}`)
+			$http.get(`https://emlemproxy.herokuapp.com/api/places/nearbysearch/json?location=${userLat},${userLon}&radius=${radiusM}&opennow=true&type=restaurant&keyword=food&key=${API}`)
 			.then( (placesData) => {
 				//the nextpagetoken is part of the object for the first page of results
 				console.log("places??", placesData.data);

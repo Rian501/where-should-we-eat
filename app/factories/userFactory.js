@@ -7,11 +7,6 @@ eatsApp.factory('UserFactory', function($q, $http, FirebaseUrl, FBCreds) {
 		authDomain: FBCreds.authDomain
 	};
 
-	let userLoc = {
-      lat: 0,
-      lng: 0
-    };
-
 	firebase.initializeApp(config);
 	var provider = new firebase.auth.GoogleAuthProvider();
 
@@ -59,23 +54,7 @@ eatsApp.factory('UserFactory', function($q, $http, FirebaseUrl, FBCreds) {
 	};
 
 
-	let locateUser = () => {
-		console.log("get user location button clicked");
-		if (navigator.geolocation) {
-		  console.log("navigator?", navigator.geolocation);
-	      navigator.geolocation.getCurrentPosition(function(position) {
-		    userLoc = {
-		      lat: position.coords.latitude,
-		      lng: position.coords.longitude
-		    };
-		    console.log("userLocation?", userLoc);
-		    //return userLoc;
-		  });
+	
 
-		} else {
-			console.log("There was a problem with geolocation");
-		}
-	};
-
-return {locateUser, loginUser, isAuthenticated, getUser, logoutUser};
+return { loginUser, isAuthenticated, getUser, logoutUser};
 });
