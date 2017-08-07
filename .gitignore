@@ -1,0 +1,6 @@
+./app/values/googleCreds.js
+./app/values/FBCreds.js
+lib/node_modules
+lib/.sass-cache
+eatsApp/
+css/
