@@ -4,13 +4,8 @@
 	<title>What Should We Eat?</title>
 </head>
 <body ng-app="EatsApp">
-
-	<section ng-controller="SuggestionsUserController">
-		<button ng-click="getUserLocation()">Get My Location</button>
-		
-		
-	</section>
-
+	<section ng-view></section>
+	
 
 <!-- dependencies -->
   <script type="text/javascript" src="./lib/node_modules/jquery/dist/jquery.min.js"></script>
@@ -25,8 +20,10 @@
 	<script type="text/javascript" src="app/values/FBCreds.js"></script>
 	<script type="text/javascript" src="app/values/googleCreds.js"></script>
 	<script type="text/javascript" src="app/factories/suggestionFactory.js"></script>
+	<script type="text/javascript" src="app/factories/userFactory.js"></script>
 <!-- controllers -->
 	<script type="text/javascript" src="app/controllers/SuggUserController.js"></script>
+	<script type="text/javascript" src="app/controllers/UserController.js"></script>
 
 </body>
 </html>
