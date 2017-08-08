@@ -34,5 +34,10 @@ eatsApp.config(($routeProvider)=>{
         controller: 'SuggestionsUserController',
         resolve: {isAuth}
     })
+    .when('/user/edit', {
+        templateUrl: 'templates/editBlacklist.html',
+        controller: 'BlacklistEditController',
+        resolve: {isAuth}
+    })
     .otherwise('/');
 });

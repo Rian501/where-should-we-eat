@@ -6,6 +6,7 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 
 	$scope.initSuggestionsArray = () => {
 		console.log("suggestions array initiated");
+		buildBlacklist();
 		UserFactory.locateUser()
 		.then( (data) => {
 			console.log("userLoc?", data);
@@ -13,6 +14,7 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 			.then( (results) => {
 			  	console.log("results!", results);
 			  	suggestionsArray = results;
+			  	checkSuggestions();
 			  		console.log("suggestions array", suggestionsArray);
 			  		return suggestionsArray;
 			  	});
@@ -28,7 +30,7 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 				//concat the second (third?) page of results
 				suggestionsArray = suggestionsArray.concat(data.data.results);
 				suggestionsArray = _.uniq(suggestionsArray, 'id');
-				//TODO need to ensure no duplicates
+				checkSuggestions();
 			});
 		}
 	};
@@ -50,12 +52,26 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 
 		let photomaxwidth = $scope.currentSuggestion.photos[0].width;
 		let photoref = $scope.currentSuggestion.photos[0].photo_reference;
-		$scope.currentSuggestion.photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photoreference=${photoref}&key=${GoogleCreds.apiKey}`;
+		$scope.currentSuggestion.photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoref}&key=${GoogleCreds.apiKey}`;
 	  };
+	
+	let rejectsArray = [];
 
+	function buildBlacklist()  {
+		let currentUser = UserFactory.getUser();
+		console.log("currentUser", currentUser);
+		SuggestionsFactory.getBlacklist(currentUser)
+		.then( (listData) => {
+			console.log("blacklist", listData);
+			rejectsArray = rejectsArray.concat(listData);
+		});
+	}
+	
 	$scope.rejectSuggestion = () => {
 	//add to rejects array? And/or remove from suggestions array -- currently "showNewSuggestion" is doing this
-
+		let newReject = $scope.currentSuggestion.id;
+		rejectsArray.push(newReject);
+		console.log("rejects ", rejectsArray);
 	};
 
 	$scope.blacklistSuggestion = (place_id) => {
@@ -67,14 +83,21 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 			};
 			console.log("userid?", UserFactory.getUser());
 			SuggestionsFactory.addToBlacklist(neverObj);
+	};
 
-			
-	
-
-	//save to a blacklist firebase collection and remove from dom
+	function checkSuggestions() {
+		rejectsArray.forEach(function(item) {
+			for (let i = 0; i < suggestionsArray.length; i++) {
+				if (item.place_id == suggestionsArray[i].id) {
+					console.log("what was cut?", suggestionsArray[i]);
+					suggestionsArray.splice(i, i+1);
+				}
+			}
+		});
+		console.log("rejects removed I think", rejectsArray);
+	}
 // get id, make array of IDs, make sure nothing with a matching ID gets shown with an if statement?
 //loop through ids and compare to suggestionsarray and remove from suggestions array anything that does match? Or, on point of display, check?
-	};
 
 //maybe make a rejects array that start out with all blacklist items and each temp reject can be pushed into the array, and eachtime the upcoming suggestion should be checked against the array of nopes
 	

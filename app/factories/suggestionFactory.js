@@ -74,8 +74,26 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 		});
 	};
 
+	let getBlacklist = (uid) => {
+		//get the objects on FB that match the UID
+		return $q( (resolve, reject) => {
+			$http.get(`${FirebaseUrl}blacklist.json?orderBy="uid"&equalTo="${uid}"`)
+			.then( (data) => {
+				let blacklistArr = [];
+				console.log("data from getBlacklist?", data);
+				Object.keys(data.data).forEach( (key) => {
+					data.data[key].FBid = key;
+					blacklistArr.push(data.data[key]);
+				});
+				resolve(blacklistArr);
+			})
+			.catch( (err) => {
+				reject(err);
+			});
+		});
+	};
 
-	return { fetchAPISuggestions, fetchMoreSuggestions, addToBlacklist };
+	return { fetchAPISuggestions, fetchMoreSuggestions, addToBlacklist, getBlacklist };
 });
 
 
