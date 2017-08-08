@@ -63,7 +63,7 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 
 	let addToBlacklist = (nopeObj) => {
 		return $q( (resolve, reject) => {
-			$http.post(`${FirebaseUrl}.json`,
+			$http.post(`${FirebaseUrl}blacklist.json`,
 				angular.toJson(nopeObj))
 			.then( (response) => {
 				resolve(response);

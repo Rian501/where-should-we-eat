@@ -27,6 +27,7 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 				console.log("more data", data.data.results);
 				//concat the second (third?) page of results
 				suggestionsArray = suggestionsArray.concat(data.data.results);
+				suggestionsArray = _.uniq(suggestionsArray, 'place_id');
 				//TODO need to ensure no duplicates
 			});
 		}
@@ -58,11 +59,18 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 	};
 
 	$scope.blacklistSuggestion = (place_id) => {
-		let neverObj = {
-			id: place_id,
-			uid: UserFactory.uid
-		};
-		SuggestionsFactory.addToBlacklist(neverObj);
+		let currentUser = UserFactory.getUser();
+		console.log("current user?", currentUser);
+			let neverObj = {
+				place_id: place_id,
+				uid: currentUser
+			};
+			console.log("userid?", UserFactory.getUser());
+			SuggestionsFactory.addToBlacklist(neverObj);
+
+			
+	
+
 	//save to a blacklist firebase collection and remove from dom
 // get id, make array of IDs, make sure nothing with a matching ID gets shown with an if statement?
 //loop through ids and compare to suggestionsarray and remove from suggestions array anything that does match? Or, on point of display, check?
