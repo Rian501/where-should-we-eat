@@ -1,6 +1,6 @@
 'use strict';
 
-eatsApp.factory('UserFactory', function($q, $http, FirebaseUrl, FBCreds) {
+eatsApp.factory('UserFactory', function($q, $http, $window, FirebaseUrl, FBCreds) {
 
 	var config = {
 		apiKey: FBCreds.apiKey,
@@ -41,6 +41,23 @@ eatsApp.factory('UserFactory', function($q, $http, FirebaseUrl, FBCreds) {
 		});
 	  };
 
+	let userLoc = {};
+
+	let locateUser = () => {
+		return $q( (resolve, reject) => {
+			console.log("locating user");
+			if (navigator.geolocation) {
+		      navigator.geolocation.getCurrentPosition(function(position) {
+				    userLoc.lat = position.coords.latitude;
+				    userLoc.lng = position.coords.longitude;
+		      	 resolve(userLoc);
+				});
+			} else {
+				console.log("Your browser does not seem to support geolocation!");
+			}
+	    });
+	};
+
 	let getUser = () => {
 		console.log("currentUser", currentUser);
 		return currentUser;
@@ -56,5 +73,6 @@ eatsApp.factory('UserFactory', function($q, $http, FirebaseUrl, FBCreds) {
 
 	
 
-return { loginUser, isAuthenticated, getUser, logoutUser};
+return { loginUser, isAuthenticated, getUser, logoutUser, locateUser };
+
 });

@@ -16,6 +16,9 @@ let isAuth = (UserFactory)  => {
     });
 };
 
+
+
+
 eatsApp.config(($routeProvider)=>{
     $routeProvider
     .when('/', {

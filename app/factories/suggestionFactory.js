@@ -52,7 +52,7 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds) {
 			//keyword can also be adjusted for filtering..?
 			$http.get(`https://emlemproxy.herokuapp.com/api/places/photo?maxwidth=${photomaxwidth}&photoreference=${photoref}&key=${API}`)
 			.then( (photoData) => {
-				console.log("photo data", photoData.data);
+				console.log("photo data", photoData);
 			});
 	});
   };
