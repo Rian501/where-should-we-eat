@@ -19,11 +19,23 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 		});
 	};
 
+	$scope.moreSuggestions = () => {
+		//add more suggestions to the possible suggestions array
+		if (suggestionsArray.length < 30)  {
+			SuggestionsFactory.fetchMoreSuggestions()
+			.then( (data) => {
+				console.log("more data", data.data.results);
+				//concat the second (third?) page of results
+				suggestionsArray = suggestionsArray.concat(data.data.results);
+				//TODO need to ensure no duplicates
+			});
+		}
+	};
 
 	function generateRandom(array) {
-	//pick a number between 0 and array length - this function may be causing problems by choosing numbers that don't work..?
-		let max = Math.floor(array.length);
-		return Math.floor(Math.random()*(max+1));
+	//pick a number between 0 and array length 
+		let max = Math.floor(array.length-1);
+		return Math.floor(Math.random()*(max));
 	}
 
 
@@ -41,15 +53,29 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 	  };
 
 	$scope.rejectSuggestion = () => {
-	//add to rejects array? And/or remove from suggestions array
+	//add to rejects array? And/or remove from suggestions array -- currently "showNewSuggestion" is doing this
 
 	};
 
-	$scope.blacklistSuggestion = () => {
+	$scope.blacklistSuggestion = (place_id) => {
+		let neverObj = {
+			id: place_id,
+			uid: UserFactory.uid
+		};
+		SuggestionsFactory.addToBlacklist(neverObj);
 	//save to a blacklist firebase collection and remove from dom
-
+// get id, make array of IDs, make sure nothing with a matching ID gets shown with an if statement?
+//loop through ids and compare to suggestionsarray and remove from suggestions array anything that does match? Or, on point of display, check?
 	};
 
-	  //function to reject - add place_id to a rejects array?
+	
+  $scope.logout = () => {
+      UserFactory.logoutUser()
+      .then( (data) => {
+          $window.location.href = "#!/";
+          alert('successfully logged out');
+      });
+  };
+	
 	
 });

@@ -2,7 +2,7 @@
 <!-- maybe get location on load and then use a button to kick off suggestions? -->
 <div ng-init="initSuggestionsArray()"></div>
 
-		<button ng-click="showNewSuggestion()">Make a new suggestion!</button>
+		<button ng-click="showNewSuggestion(); moreSuggestions()">Make a new suggestion!</button>
 		<p>Suggestions should go here:</p>
 		<div data-place-id={{currentSuggestion.place_id}}>
 			<h1>{{currentSuggestion.name}}</h1>
@@ -12,6 +12,8 @@
 			<p>Address: {{currentSuggestion.vicinity}}</p>
 			<img src="{{currentSuggestion.photoUrl}}">
 			<button>Reject</button>
+			<button ng-click="blacklistSuggestion(currentSuggestion.place_id)">NEVER</button>
 			<button>Accept</button>
+			<button ng-click="logout()">LogOut</button>
 
 		</div>

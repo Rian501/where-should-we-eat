@@ -11,7 +11,6 @@ firebase.auth().onAuthStateChanged(function(user) {
     } 
 });
 
-
     $scope.loginUser = () => {
         UserFactory.loginUser()
         .then( (data) => {

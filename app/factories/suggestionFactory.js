@@ -1,6 +1,6 @@
 'use strict';
 
-eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds) {
+eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseUrl) {
 
 	var config = {
 		apiKey: GoogleCreds.apiKey
@@ -29,14 +29,16 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds) {
 	};
 
 //new function for when user clicks next thingy.
-	let moreSuggestions = () => {
+	let fetchMoreSuggestions = () => {
 		return $q( (resolve, reject) => {
 			console.log("page token?", nextPageToken);
 			console.log("API long", GoogleCreds.apiKey);
 			console.log("API short", API);
-			$http.get(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken=${nextPageToken}&key=${API}`)
+			$http.get(`https://emlemproxy.herokuapp.com/api/places/nearbysearch/json?pagetoken=${nextPageToken}&key=${API}`)
 			.then( (placesDataII) => {
 				console.log("places II??", placesDataII);
+				nextPageToken = placesDataII.data.next_page_token;
+				resolve(placesDataII);
 			});
 		});
 	};
@@ -45,19 +47,35 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds) {
 	//or in controller. Perhaps here build an array of open now, then filter by user stuff
 	//in controller.
 //it is not permitted to preload all 60, so a user action will need to trigger the first pagetoken reload.... separate function probably, with the first setting the value of the npt, and then the function being called on the first user reject click? this is more in line with the intended use of the api.
-  let getOnePhoto = (photomaxwidth, photoref) => {
-	return $q( (resolve, reject) => {
-			//opennow parameter auto filters results for currently open stuff
-			//type restaurant can be changed...
-			//keyword can also be adjusted for filtering..?
-			$http.get(`https://emlemproxy.herokuapp.com/api/places/photo?maxwidth=${photomaxwidth}&photoreference=${photoref}&key=${API}`)
-			.then( (photoData) => {
-				console.log("photo data", photoData);
-			});
-	});
-  };
 
-	return { fetchAPISuggestions, getOnePhoto };
+
+ //  let getOnePhoto = (photomaxwidth, photoref) => {
+	// return $q( (resolve, reject) => {
+	// 		//opennow parameter auto filters results for currently open stuff
+	// 		//type restaurant can be changed...
+	// 		//keyword can also be adjusted for filtering..?
+	// 		$http.get(`https://emlemproxy.herokuapp.com/api/places/photo?maxwidth=${photomaxwidth}&photoreference=${photoref}&key=${API}`)
+	// 		.then( (photoData) => {
+	// 			console.log("photo data", photoData);
+	// 		});
+	// });
+ //  };
+
+	let addToBlacklist = (nopeObj) => {
+		return $q( (resolve, reject) => {
+			$http.post(`${FirebaseUrl}.json`,
+				angular.toJson(nopeObj))
+			.then( (response) => {
+				resolve(response);
+			})
+			.catch( (err) => {
+				reject(err);
+			});
+		});
+	};
+
+
+	return { fetchAPISuggestions, fetchMoreSuggestions, addToBlacklist };
 });
 
 
