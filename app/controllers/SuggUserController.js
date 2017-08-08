@@ -1,45 +1,113 @@
 'use strict';
 
 eatsApp.controller('SuggestionsUserController', function ($scope, $window, $routeParams, UserFactory, SuggestionsFactory, GoogleCreds) {
-	
-	$scope.userLoc = {
-      lat: 0,
-      lng: 0
-    };
 
     let suggestionsArray = [];
 
-	$scope.getUserLocation = () => {
-		if (navigator.geolocation) {
-	      navigator.geolocation.getCurrentPosition(function(position) {
-		    $scope.userLoc = {
-		      lat: position.coords.latitude,
-		      lng: position.coords.longitude
-		    };
-		    $scope.makeSuggestionsArray();
-		  });
-		} else {
-			console.log("There was a problem with geolocation");
-		}
-
+	$scope.initSuggestionsArray = () => {
+		console.log("suggestions array initiated");
+		buildBlacklist();
+		UserFactory.locateUser()
+		.then( (data) => {
+			console.log("userLoc?", data);
+			SuggestionsFactory.fetchAPISuggestions(data.lat, data.lng, 8050)
+			.then( (results) => {
+			  	console.log("results!", results);
+			  	suggestionsArray = results;
+			  	checkSuggestions();
+			  		console.log("suggestions array", suggestionsArray);
+			  		return suggestionsArray;
+			  	});
+		});
 	};
 
-	$scope.makeSuggestionsArray = () => {
-		SuggestionsFactory.fetchAPISuggestions($scope.userLoc.lat, $scope.userLoc.lng, 8050)
-		.then( (results) => {
-		  	console.log("results!", results);
-		  	suggestionsArray = results;
-		  		console.log("suggestions array", suggestionsArray);
-		  		return suggestionsArray;
-		  	});
-		};
+	$scope.moreSuggestions = () => {
+		//add more suggestions to the possible suggestions array
+		if (suggestionsArray.length < 30)  {
+			SuggestionsFactory.fetchMoreSuggestions()
+			.then( (data) => {
+				console.log("more data", data.data.results);
+				//concat the second (third?) page of results
+				suggestionsArray = suggestionsArray.concat(data.data.results);
+				suggestionsArray = _.uniq(suggestionsArray, 'id');
+				checkSuggestions();
+			});
+		}
+	};
 
-	$scope.showASuggestion = () => {
+	function generateRandom(array) {
+	//pick a number between 0 and array length 
+		let max = Math.floor(array.length-1);
+		return Math.floor(Math.random()*(max));
+	}
+
+
+	$scope.showNewSuggestion = () => {
 		console.log("suggestions array", suggestionsArray);
-		$scope.currentSuggestion = suggestionsArray.slice(0,1)[0];
+		let rando = generateRandom(suggestionsArray);
+		$scope.currentSuggestion = suggestionsArray.slice(rando, rando+1)[0];
+		suggestionsArray.splice(rando, 1);
+		console.log("suggestions array after splice?", suggestionsArray);
 		console.log("current suggestion", $scope.currentSuggestion);
-		//let photomaxwidth = $scope.currentSuggestion.photos[0].width;
-		//let photoref = $scope.currentSuggestion.photos[0].photo_reference;
-		//SuggestionsFactory.getOnePhoto(photomaxwidth, photoref);
+
+		let photomaxwidth = $scope.currentSuggestion.photos[0].width;
+		let photoref = $scope.currentSuggestion.photos[0].photo_reference;
+		$scope.currentSuggestion.photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoref}&key=${GoogleCreds.apiKey}`;
 	  };
+	
+	let rejectsArray = [];
+
+	function buildBlacklist()  {
+		let currentUser = UserFactory.getUser();
+		console.log("currentUser", currentUser);
+		SuggestionsFactory.getBlacklist(currentUser)
+		.then( (listData) => {
+			console.log("blacklist", listData);
+			rejectsArray = rejectsArray.concat(listData);
+		});
+	}
+	
+	$scope.rejectSuggestion = () => {
+	//add to rejects array? And/or remove from suggestions array -- currently "showNewSuggestion" is doing this
+		let newReject = $scope.currentSuggestion.id;
+		rejectsArray.push(newReject);
+		console.log("rejects ", rejectsArray);
+	};
+
+	$scope.blacklistSuggestion = (place_id) => {
+		let currentUser = UserFactory.getUser();
+		console.log("current user?", currentUser);
+			let neverObj = {
+				place_id: place_id,
+				uid: currentUser
+			};
+			console.log("userid?", UserFactory.getUser());
+			SuggestionsFactory.addToBlacklist(neverObj);
+	};
+
+	function checkSuggestions() {
+		rejectsArray.forEach(function(item) {
+			for (let i = 0; i < suggestionsArray.length; i++) {
+				if (item.place_id == suggestionsArray[i].id) {
+					console.log("what was cut?", suggestionsArray[i]);
+					suggestionsArray.splice(i, i+1);
+				}
+			}
+		});
+		console.log("rejects removed I think", rejectsArray);
+	}
+// get id, make array of IDs, make sure nothing with a matching ID gets shown with an if statement?
+//loop through ids and compare to suggestionsarray and remove from suggestions array anything that does match? Or, on point of display, check?
+
+//maybe make a rejects array that start out with all blacklist items and each temp reject can be pushed into the array, and eachtime the upcoming suggestion should be checked against the array of nopes
+	
+  $scope.logout = () => {
+      UserFactory.logoutUser()
+      .then( (data) => {
+          $window.location.href = "#!/";
+          alert('successfully logged out');
+      });
+  };
+	
+	
 });
