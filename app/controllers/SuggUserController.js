@@ -27,7 +27,7 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 				console.log("more data", data.data.results);
 				//concat the second (third?) page of results
 				suggestionsArray = suggestionsArray.concat(data.data.results);
-				suggestionsArray = _.uniq(suggestionsArray, 'place_id');
+				suggestionsArray = _.uniq(suggestionsArray, 'id');
 				//TODO need to ensure no duplicates
 			});
 		}
@@ -76,6 +76,7 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 //loop through ids and compare to suggestionsarray and remove from suggestions array anything that does match? Or, on point of display, check?
 	};
 
+//maybe make a rejects array that start out with all blacklist items and each temp reject can be pushed into the array, and eachtime the upcoming suggestion should be checked against the array of nopes
 	
   $scope.logout = () => {
       UserFactory.logoutUser()
