@@ -4,10 +4,11 @@
 	<title>Where Should We Eat? ¯\_(ツ)_/¯</title>
     <meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
 <body ng-app="EatsApp">
-<h1>¯\_(シ)_/¯</h1>
-<a href='#!/user/edit'><button>Edit User Preferences</button></a>
+<!-- <a href='#!/user/edit'><button>Edit User Preferences</button></a> -->
+  <div ng-include="'templates/userNav.html'"></div>
 	<section ng-view></section>
 	
 
@@ -30,6 +31,7 @@
 	<script type="text/javascript" src="app/controllers/SuggUserController.js"></script>
 	<script type="text/javascript" src="app/controllers/UserController.js"></script>
 	<script type="text/javascript" src="app/controllers/BlacklistEditController.js"></script>
+	<script type="text/javascript" src="app/controllers/NavController.js"></script>
 
 </body>
 </html>

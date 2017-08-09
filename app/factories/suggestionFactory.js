@@ -3,10 +3,12 @@
 eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseUrl) {
 
 	var config = {
-		apiKey: GoogleCreds.apiKey
+		placesAPI: GoogleCreds.PlacesApiKey,
+		directionsAPI: GoogleCreds.DirectionsApiKey
 	};
 	
-	let API = config.apiKey;
+	let placesAPI = config.placesAPI;
+	let directionsAPI = config.directionsAPI;
 	let nextPageToken = null;
 
 	let fetchAPISuggestions = (userLat, userLon, radiusM) => {
@@ -17,7 +19,7 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 			//opennow parameter auto filters results for currently open stuff
 			//type restaurant can be changed...
 			//keyword can also be adjusted for filtering..?
-			$http.get(`https://emlemproxy.herokuapp.com/api/places/nearbysearch/json?location=${userLat},${userLon}&radius=${radiusM}&opennow=true&type=restaurant&keyword=food&key=${API}`)
+			$http.get(`https://emlemproxy.herokuapp.com/api/places/nearbysearch/json?location=${userLat},${userLon}&radius=${radiusM}&opennow=true&type=restaurant&keyword=food&key=${placesAPI}`)
 			.then( (placesData) => {
 				//the nextpagetoken is part of the object for the first page of results
 				console.log("places??", placesData.data);
@@ -32,9 +34,7 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 	let fetchMoreSuggestions = () => {
 		return $q( (resolve, reject) => {
 			console.log("page token?", nextPageToken);
-			console.log("API long", GoogleCreds.apiKey);
-			console.log("API short", API);
-			$http.get(`https://emlemproxy.herokuapp.com/api/places/nearbysearch/json?pagetoken=${nextPageToken}&key=${API}`)
+			$http.get(`https://emlemproxy.herokuapp.com/api/places/nearbysearch/json?pagetoken=${nextPageToken}&key=${placesAPI}`)
 			.then( (placesDataII) => {
 				console.log("places II??", placesDataII);
 				nextPageToken = placesDataII.data.next_page_token;
@@ -43,15 +43,15 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 		});
 	};
 
-	// let getDirections = () => {
-	// 	return $q( (resolve, reject) => {
-	// 		$http.get(`https://emlemproxy.herokuapp.com/api/directions/json?origin=[[usercoordinates]]&destination=place_id:[[PLACEID]]&key=YOUR_API_KEY`)
-	// 	});
-	// };
+	let getDirections = (userLat, userLon, destID) => {
+		return $q( (resolve, reject) => {
+			$http.get(`https://emlemproxy.herokuapp.com/api/directions/json?origin=${userLat},${userLon}&destination=place_id:${destID}&key=${directionsAPI}`);
+		});
+	};
 
 	let getPlaceDetails = (place_id) => {
 		return $q( (resolve, reject) => {
-			$http.get(`https://emlemproxy.herokuapp.com/api/places/details/json?placeid=${place_id}&key=${API}`)
+			$http.get(`https://emlemproxy.herokuapp.com/api/places/details/json?placeid=${place_id}&key=${placesAPI}`)
 			.then( (detailsData) => {
 				resolve(detailsData.data.result);
 			});

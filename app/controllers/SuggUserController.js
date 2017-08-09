@@ -61,7 +61,7 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 		});
 		if ($scope.currentSuggestion.photos !== undefined) {
 			let photoref = $scope.currentSuggestion.photos[0].photo_reference;
-			$scope.currentSuggestion.photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoref}&key=${GoogleCreds.apiKey}`;
+			$scope.currentSuggestion.photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoref}&key=${GoogleCreds.PlacesApiKey}`;
 		} else {
 			$scope.currentSuggestion.photoUrl = `../../lib/images/restaurant-1724294_640.png`;
 		}
@@ -112,14 +112,7 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 		});
 		console.log("current state of rejects array", rejectsArray);
 	}
-	
-  $scope.logout = () => {
-      UserFactory.logoutUser()
-      .then( (data) => {
-          $window.location.href = "#!/";
-          alert('successfully logged out');
-      });
-  };
+
 	
 	
 });
