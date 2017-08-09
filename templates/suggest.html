@@ -2,13 +2,14 @@
 
 <div ng-init="initSuggestionsArray()"></div>
 
-		<div data-place-id={{currentSuggestion.id}}>
-			<h1>{{currentSuggestion.name}}</h1>
-			<p>Price level: {{currentSuggestion.price_level}}</p>
-			<p>Avg. Rating: {{currentSuggestion.rating}}</p>
-			<p>Address: {{currentSuggestion.vicinity}}</p>
-			<img src="{{currentSuggestion.photoUrl}}">
-			<button ng-click="showNewSuggestion(); moreSuggestions(); rejectSuggestion()">Make a New Suggestion!</button>
-			<button ng-click="blacklistSuggestion(currentSuggestion.id, currentSuggestion.vicinity, currentSuggestion.name)">I HATE THAT PLACE</button>
-			<button>I want to go to there</button>
-		</div>
+	<div class="restaurantDisp" data-place-id={{currentSuggestion.id}} ng-style="{'background-image': 'url(' + currentSuggestion.photoUrl + ')'}">
+		<h1 class="restDisp restName">{{currentSuggestion.name}}</h1>
+		<p class="restDisp restDetail">Price level: {{currentSuggestion.price_level}}</p>
+		<p class="restDisp restDetail">Avg. Rating: {{currentSuggestion.rating}}</p>
+		<p class="restDisp restDetail">Address: {{currentSuggestion.vicinity}}</p>
+		<!-- <img src="{{currentSuggestion.photoUrl}}"> -->
+		<button type="button" class="btn btn-outline-warning btn-lg btn-block" ng-click="showNewSuggestion(); moreSuggestions(); rejectSuggestion()">Make a New Suggestion!</button>
+		<button type="button" class="btn btn-outline-danger btn-lg btn-block" ng-click="blacklistSuggestion(currentSuggestion.id, currentSuggestion.vicinity, currentSuggestion.name)">I hate that place</button>
+		<button type="button" class="btn btn-outline-success btn-lg btn-block">I want to go to there</button>
+		<button type="button" class="btn btn-outline-info btn-lg btn-block">Maybe next time</button>
+	</div>

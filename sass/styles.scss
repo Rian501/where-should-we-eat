@@ -1,2 +1,16 @@
 @import '../lib/node_modules/bootstrap/scss/bootstrap.scss';
 @import '../lib/node_modules/tether/dist/css/tether.min.css';
+
+
+.restDisp {
+	text-align: center;
+}
+
+.restaurantDisp {
+	background-repeat: no-repeat;
+	text-shadow: -1px -1px 0 #000,
+		1px -1px 0 #000,
+		-1px 1px 0 #000,
+		1px 1px 0 #000;
+}
+}

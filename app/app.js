@@ -26,8 +26,8 @@ eatsApp.config(($routeProvider)=>{
         controller: 'UserController'
     })
     .when('/guest/suggest', {
-        templateUrl: 'templates/suggest.html',
-        controller: ''
+        templateUrl: 'templates/sug-guest.html',
+        controller: 'SuggestionsGuestController'
     })
     .when('/user/suggest', {
         templateUrl: 'templates/suggest.html',

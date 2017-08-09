@@ -1,11 +1,10 @@
 'use strict';
 
-eatsApp.controller('SuggestionsUserController', function ($scope, $window, $routeParams, UserFactory, SuggestionsFactory, GoogleCreds) {
+eatsApp.controller('SuggestionsGuestController', function ($scope, $window, $routeParams, UserFactory, SuggestionsFactory, GoogleCreds) {
 
     let suggestionsArray = [];
 
 	$scope.initSuggestionsArray = () => {
-		buildBlacklist();
 		UserFactory.locateUser()
 		.then( (data) => {
 			console.log("userLoc?", data);
@@ -74,15 +73,6 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 	
 	let rejectsArray = [];
 
-	function buildBlacklist()  {
-		let currentUser = UserFactory.getUser();
-		console.log("currentUser", currentUser);
-		SuggestionsFactory.getBlacklist(currentUser)
-		.then( (listData) => {
-			console.log("blacklist", listData);
-			rejectsArray = rejectsArray.concat(listData);
-		});
-	}
 	
 	$scope.rejectSuggestion = () => {
 		let newReject = $scope.currentSuggestion.id;
@@ -90,19 +80,6 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 		console.log("rejects ", rejectsArray);
 	};
 
-	$scope.blacklistSuggestion = (place_id, vicinity, locName) => {
-		let currentUser = UserFactory.getUser();
-			let neverObj = {
-				name: locName,
-				address: vicinity,
-				place_id: place_id,
-				uid: currentUser
-			};
-			SuggestionsFactory.addToBlacklist(neverObj)
-			.then( (response) => {
-				$scope.showNewSuggestion();
-			});
-	};
 
 	function checkSuggestions() {
 		rejectsArray.forEach(function(item) {
@@ -119,3 +96,4 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 	
 	
 });
+
