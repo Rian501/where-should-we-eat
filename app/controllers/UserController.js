@@ -18,4 +18,6 @@ firebase.auth().onAuthStateChanged(function(user) {
             $window.location.href = '#!/user/suggest';
         });
     };
+
+    
 });

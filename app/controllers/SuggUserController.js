@@ -5,7 +5,6 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
     let suggestionsArray = [];
 
 	$scope.initSuggestionsArray = () => {
-		console.log("suggestions array initiated");
 		buildBlacklist();
 		UserFactory.locateUser()
 		.then( (data) => {
@@ -26,8 +25,7 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 		if (suggestionsArray.length < 30)  {
 			SuggestionsFactory.fetchMoreSuggestions()
 			.then( (data) => {
-				console.log("more data", data.data.results);
-				//concat the second (third?) page of results
+				//concat the next page of results
 				suggestionsArray = suggestionsArray.concat(data.data.results);
 				suggestionsArray = _.uniq(suggestionsArray, 'id');
 				checkSuggestions();
@@ -41,19 +39,35 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 		return Math.floor(Math.random()*(max));
 	}
 
+	let today = UserFactory.getDay();
 
 	$scope.showNewSuggestion = () => {
+		if (suggestionsArray.length === 0) {
+			$window.alert("Picky picky! You have rejected all results. Please try again.");
+		} else {
 		console.log("suggestions array", suggestionsArray);
 		let rando = generateRandom(suggestionsArray);
 		$scope.currentSuggestion = suggestionsArray.slice(rando, rando+1)[0];
 		suggestionsArray.splice(rando, 1);
-		console.log("suggestions array after splice?", suggestionsArray);
 		console.log("current suggestion", $scope.currentSuggestion);
+		//probably need a promiseALL to get the date and also the details to display -
+		// just display based on string word day instead of number..?
+		//some places close and reopen in one day
+		SuggestionsFactory.getPlaceDetails($scope.currentSuggestion.place_id)
+		.then( (details) => {
+			console.log("details?", details);
+			console.log("hours per day with monday being 0", details.opening_hours);
+			console.log("today's code?", today);
+		});
+		if ($scope.currentSuggestion.photos !== undefined) {
+			let photoref = $scope.currentSuggestion.photos[0].photo_reference;
+			$scope.currentSuggestion.photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoref}&key=${GoogleCreds.apiKey}`;
+		} else {
+			$scope.currentSuggestion.photoUrl = `../../lib/images/restaurant-1724294_640.png`;
+		}
+	  }
+	};
 
-		let photomaxwidth = $scope.currentSuggestion.photos[0].width;
-		let photoref = $scope.currentSuggestion.photos[0].photo_reference;
-		$scope.currentSuggestion.photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoref}&key=${GoogleCreds.apiKey}`;
-	  };
 	
 	let rejectsArray = [];
 
@@ -68,21 +82,23 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 	}
 	
 	$scope.rejectSuggestion = () => {
-	//add to rejects array? And/or remove from suggestions array -- currently "showNewSuggestion" is doing this
 		let newReject = $scope.currentSuggestion.id;
 		rejectsArray.push(newReject);
 		console.log("rejects ", rejectsArray);
 	};
 
-	$scope.blacklistSuggestion = (place_id) => {
+	$scope.blacklistSuggestion = (place_id, vicinity, locName) => {
 		let currentUser = UserFactory.getUser();
-		console.log("current user?", currentUser);
 			let neverObj = {
+				name: locName,
+				address: vicinity,
 				place_id: place_id,
 				uid: currentUser
 			};
-			console.log("userid?", UserFactory.getUser());
-			SuggestionsFactory.addToBlacklist(neverObj);
+			SuggestionsFactory.addToBlacklist(neverObj)
+			.then( (response) => {
+				$scope.showNewSuggestion();
+			});
 	};
 
 	function checkSuggestions() {
@@ -94,12 +110,8 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 				}
 			}
 		});
-		console.log("rejects removed I think", rejectsArray);
+		console.log("current state of rejects array", rejectsArray);
 	}
-// get id, make array of IDs, make sure nothing with a matching ID gets shown with an if statement?
-//loop through ids and compare to suggestionsarray and remove from suggestions array anything that does match? Or, on point of display, check?
-
-//maybe make a rejects array that start out with all blacklist items and each temp reject can be pushed into the array, and eachtime the upcoming suggestion should be checked against the array of nopes
 	
   $scope.logout = () => {
       UserFactory.logoutUser()

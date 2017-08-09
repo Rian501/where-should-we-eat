@@ -1,18 +1,15 @@
-<h1>START NEW SESSION SCREEN AND ALSO SHOW EACH SUGGESTION</h1>
-<!-- maybe get location on load and then use a button to kick off suggestions? -->
 <div ng-init="initSuggestionsArray()"></div>
 
 		<button ng-click="showNewSuggestion(); moreSuggestions(); rejectSuggestion()">Make a new suggestion!</button>
 		<p>Suggestions should go here:</p>
 		<div data-place-id={{currentSuggestion.id}}>
 			<h1>{{currentSuggestion.name}}</h1>
-			<!-- need a separate API call for photo ref -->
 			<p>Price level: {{currentSuggestion.price_level}}</p>
 			<p>Avg. Rating: {{currentSuggestion.rating}}</p>
 			<p>Address: {{currentSuggestion.vicinity}}</p>
 			<img src="{{currentSuggestion.photoUrl}}">
 			<button>Reject</button>
-			<button ng-click="blacklistSuggestion(currentSuggestion.id)">NEVER</button>
+			<button ng-click="blacklistSuggestion(currentSuggestion.id, currentSuggestion.vicinity, currentSuggestion.name)">NEVER</button>
 			<button>Accept</button>
 			<button ng-click="logout()">LogOut</button>
 

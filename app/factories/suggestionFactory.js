@@ -42,24 +42,21 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 			});
 		});
 	};
-	//need to use token?? to get more results (next page, for example)
-	//build an array in factory? filter by Open Now here? This is fundamental, so perhaps..
-	//or in controller. Perhaps here build an array of open now, then filter by user stuff
-	//in controller.
-//it is not permitted to preload all 60, so a user action will need to trigger the first pagetoken reload.... separate function probably, with the first setting the value of the npt, and then the function being called on the first user reject click? this is more in line with the intended use of the api.
 
+	// let getDirections = () => {
+	// 	return $q( (resolve, reject) => {
+	// 		$http.get(`https://emlemproxy.herokuapp.com/api/directions/json?origin=[[usercoordinates]]&destination=place_id:[[PLACEID]]&key=YOUR_API_KEY`)
+	// 	});
+	// };
 
- //  let getOnePhoto = (photomaxwidth, photoref) => {
-	// return $q( (resolve, reject) => {
-	// 		//opennow parameter auto filters results for currently open stuff
-	// 		//type restaurant can be changed...
-	// 		//keyword can also be adjusted for filtering..?
-	// 		$http.get(`https://emlemproxy.herokuapp.com/api/places/photo?maxwidth=${photomaxwidth}&photoreference=${photoref}&key=${API}`)
-	// 		.then( (photoData) => {
-	// 			console.log("photo data", photoData);
-	// 		});
-	// });
- //  };
+	let getPlaceDetails = (place_id) => {
+		return $q( (resolve, reject) => {
+			$http.get(`https://emlemproxy.herokuapp.com/api/places/details/json?placeid=${place_id}&key=${API}`)
+			.then( (detailsData) => {
+				resolve(detailsData.data.result);
+			});
+		});
+	};
 
 	let addToBlacklist = (nopeObj) => {
 		return $q( (resolve, reject) => {
@@ -73,6 +70,23 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 			});
 		});
 	};
+
+	let removeFromBlacklist = (FBkey) => {
+		return $q( (resolve, reject) => {
+			if (FBkey) {
+				$http.delete(`${FirebaseUrl}blacklist/${FBkey}.json`)
+				.then( (data) => {
+					resolve(data);
+				})
+				.catch( (err) => {
+						reject(err);
+					});
+			} else {
+				console.log("There was a mistake trying to delete this place!");
+			}
+		});
+	};
+
 
 	let getBlacklist = (uid) => {
 		//get the objects on FB that match the UID
@@ -93,7 +107,7 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 		});
 	};
 
-	return { fetchAPISuggestions, fetchMoreSuggestions, addToBlacklist, getBlacklist };
+	return { fetchAPISuggestions, fetchMoreSuggestions, addToBlacklist, getBlacklist, removeFromBlacklist, getPlaceDetails };
 });
 
 
