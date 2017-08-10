@@ -4,13 +4,21 @@
 
 .restDisp {
 	text-align: center;
+	color: white;
+	text-shadow:1px 1px 0 black,
+		-1px -1px 0 black,
+		1px -1px 0 black,
+		-1px 1px 0 black,
+		0px 1px 0 black,
+		1px 0px 0 black,
+		0px -1px 0 black,
+		-1px 0px 0 black 
 }
 
 .restaurantDisp {
 	background-repeat: no-repeat;
-	text-shadow: -1px -1px 0 #000,
-		1px -1px 0 #000,
-		-1px 1px 0 #000,
-		1px 1px 0 #000;
 }
+
+.frontScr {
+	margin-left: 1em;
 }
