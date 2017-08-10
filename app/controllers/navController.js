@@ -9,8 +9,11 @@ eatsApp.controller('NavController', function ($scope, $window, $routeParams, Use
       UserFactory.logoutUser()
       .then( (data) => {
           $window.location.href = "#!/";
-          alert('successfully logged out');
       });
+  };
+
+  $scope.goLists = () => {
+  	$window.location.href = "#!/user/edit";
   };
 
 

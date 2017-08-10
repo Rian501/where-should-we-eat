@@ -26,8 +26,8 @@ eatsApp.config(($routeProvider)=>{
         controller: 'UserController'
     })
     .when('/guest/suggest', {
-        templateUrl: 'templates/sug-guest.html',
-        controller: 'SuggestionsGuestController'
+        templateUrl: 'templates/suggest.html',
+        controller: 'SuggestionsUserController'
     })
     .when('/user/suggest', {
         templateUrl: 'templates/suggest.html',
@@ -38,6 +38,10 @@ eatsApp.config(($routeProvider)=>{
         templateUrl: 'templates/editBlacklist.html',
         controller: 'BlacklistEditController',
         resolve: {isAuth}
+    })
+    .when('/done', {
+        templateUrl: 'templates/finished.html',
+        controller: 'FinishedController',
     })
     .otherwise('/');
 });

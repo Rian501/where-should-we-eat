@@ -4,6 +4,30 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 
     let suggestionsArray = [];
 
+    $scope.ifUser = () => {
+    	if(UserFactory.getUser()) {
+    		return true;
+    	} else {
+    		return false;
+    	}
+    };
+
+    $scope.defReady = () => {
+    	if (suggestionsArray.length === 0) {
+    		return false;
+    	} else {
+    		return true;
+    	}
+    };
+
+	$scope.getInclude = () => {
+	    if(UserFactory.getUser()){
+	        return "templates/userNav.html";
+	    } else {
+		    return "templates/noUserNav.html";
+	    }
+	};
+
 	$scope.initSuggestionsArray = () => {
 		buildBlacklist();
 		UserFactory.locateUser()
@@ -25,7 +49,7 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 
 	$scope.moreSuggestions = () => {
 		//add more suggestions to the possible suggestions array
-		if (suggestionsArray.length < 30)  {
+		if (suggestionsArray.length < 10)  {
 			SuggestionsFactory.fetchMoreSuggestions()
 			.then( (data) => {
 				//concat the next page of results
@@ -45,26 +69,25 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 	let today = UserFactory.getDay();
 
 	$scope.showNewSuggestion = () => {
-		if (suggestionsArray.length === 0) {
+		if (suggestionsArray.length === 1) {
 			$window.alert("Picky picky! You have rejected all results. Please try again.");
+			$window.location.href = "!#/";
 		} else {
+		checkSuggestions();
 		console.log("suggestions array", suggestionsArray);
 		let rando = generateRandom(suggestionsArray);
 		$scope.currentSuggestion = suggestionsArray.slice(rando, rando+1)[0];
 		suggestionsArray.splice(rando, 1);
 		console.log("current suggestion", $scope.currentSuggestion);
-		//probably need a promiseALL to get the date and also the details to display -
-		// just display based on string word day instead of number..?
-		//some places close and reopen in one day
-		SuggestionsFactory.getPlaceDetails($scope.currentSuggestion.place_id)
-		.then( (details) => {
-			console.log("details?", details);
-			console.log("hours per day with monday being 0", details.opening_hours);
-			console.log("today's code?", today);
-		});
+
+		// SuggestionsFactory.getPlaceDetails($scope.currentSuggestion.place_id)
+		// .then( (details) => {
+		// 	console.log("details?", details);
+		// });
+		
 		if ($scope.currentSuggestion.photos !== undefined) {
 			let photoref = $scope.currentSuggestion.photos[0].photo_reference;
-			$scope.currentSuggestion.photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoref}&key=${GoogleCreds.PlacesApiKey}`;
+			$scope.currentSuggestion.photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=500&photoreference=${photoref}&key=${GoogleCreds.PlacesApiKey}`;
 		} else {
 			$scope.currentSuggestion.photoUrl = `../../lib/images/restaurant-1724294_640.png`;
 		}
@@ -116,6 +139,22 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 		console.log("current state of rejects array", rejectsArray);
 	}
 
-	
+	$scope.finishSession = ()  => {
+		$window.location.href = '#!/done';
+	};
+
+	$scope.saveForLater = (place_id, vicinity, locName) => {
+		let currentUser = UserFactory.getUser();
+			let laterObj = {
+				name: locName,
+				address: vicinity,
+				place_id: place_id,
+				uid: currentUser
+			};
+				SuggestionsFactory.addToEatLater(laterObj)
+				.then( (response) => {
+					$scope.showNewSuggestion();
+				});
+		};	
 	
 });

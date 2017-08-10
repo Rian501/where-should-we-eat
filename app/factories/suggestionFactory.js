@@ -4,10 +4,12 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 
 	var config = {
 		placesAPI: GoogleCreds.PlacesApiKey,
+		placesAPI2: GoogleCreds.PlacesApiKey2,
 		directionsAPI: GoogleCreds.DirectionsApiKey
 	};
 	
 	let placesAPI = config.placesAPI;
+	let placesAPI2 = config.placesAPI2;
 	let directionsAPI = config.directionsAPI;
 	let nextPageToken = null;
 
@@ -19,7 +21,7 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 			//opennow parameter auto filters results for currently open stuff
 			//type restaurant can be changed...
 			//keyword can also be adjusted for filtering..?
-			$http.get(`https://emlemproxy.herokuapp.com/api/places/nearbysearch/json?location=${userLat},${userLon}&radius=${radiusM}&opennow=true&type=restaurant&keyword=food&key=${placesAPI}`)
+			$http.get(`https://emlemproxy.herokuapp.com/api/places/nearbysearch/json?location=${userLat},${userLon}&radius=${radiusM}&opennow=true&type=restaurant&keyword=food&key=${placesAPI2}`)
 			.then( (placesData) => {
 				//the nextpagetoken is part of the object for the first page of results
 				console.log("places??", placesData.data);
@@ -31,16 +33,21 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 	};
 
 //new function for when user clicks next thingy.
+	let moreCounter = 0;
 	let fetchMoreSuggestions = () => {
-		return $q( (resolve, reject) => {
-			console.log("page token?", nextPageToken);
-			$http.get(`https://emlemproxy.herokuapp.com/api/places/nearbysearch/json?pagetoken=${nextPageToken}&key=${placesAPI}`)
-			.then( (placesDataII) => {
-				console.log("places II??", placesDataII);
-				nextPageToken = placesDataII.data.next_page_token;
-				resolve(placesDataII);
+		if (moreCounter < 3) {
+			return $q( (resolve, reject) => {
+				console.log("page token?", nextPageToken);
+				$http.get(`https://emlemproxy.herokuapp.com/api/places/nearbysearch/json?pagetoken=${nextPageToken}&key=${placesAPI2}`)
+				.then( (placesDataII) => {
+					console.log("places II??", placesDataII);
+					nextPageToken = placesDataII.data.next_page_token;
+					moreCounter += 1;
+					resolve(placesDataII);
+				});
 			});
-		});
+			
+		}
 	};
 
 	let getDirections = (userLat, userLon, destID) => {
@@ -51,7 +58,7 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 
 	let getPlaceDetails = (place_id) => {
 		return $q( (resolve, reject) => {
-			$http.get(`https://emlemproxy.herokuapp.com/api/places/details/json?placeid=${place_id}&key=${placesAPI}`)
+			$http.get(`https://emlemproxy.herokuapp.com/api/places/details/json?placeid=${place_id}&key=${placesAPI2}`)
 			.then( (detailsData) => {
 				resolve(detailsData.data.result);
 			});
@@ -62,6 +69,19 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 		return $q( (resolve, reject) => {
 			$http.post(`${FirebaseUrl}blacklist.json`,
 				angular.toJson(nopeObj))
+			.then( (response) => {
+				resolve(response);
+			})
+			.catch( (err) => {
+				reject(err);
+			});
+		});
+	};
+
+	let addToEatLater = (laterObj) => {
+		return $q( (resolve, reject) => {
+			$http.post(`${FirebaseUrl}trylater.json`,
+				angular.toJson(laterObj))
 			.then( (response) => {
 				resolve(response);
 			})
@@ -88,6 +108,22 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 	};
 
 
+	let removeFromSavelist = (FBkey) => {
+		return $q( (resolve, reject) => {
+			if (FBkey) {
+				$http.delete(`${FirebaseUrl}trylater/${FBkey}.json`)
+				.then( (data) => {
+					resolve(data);
+				})
+				.catch( (err) => {
+						reject(err);
+					});
+			} else {
+				console.log("There was a mistake trying to delete this place!");
+			}
+		});
+	};
+
 	let getBlacklist = (uid) => {
 		//get the objects on FB that match the UID
 		return $q( (resolve, reject) => {
@@ -107,7 +143,26 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 		});
 	};
 
-	return { fetchAPISuggestions, fetchMoreSuggestions, addToBlacklist, getBlacklist, removeFromBlacklist, getPlaceDetails };
+	let getSavedlist = (uid) => {
+		//get the objects on FB that match the UID
+		return $q( (resolve, reject) => {
+			$http.get(`${FirebaseUrl}trylater.json?orderBy="uid"&equalTo="${uid}"`)
+			.then( (data) => {
+				let tryLaterArr = [];
+				console.log("data from try later?", data);
+				Object.keys(data.data).forEach( (key) => {
+					data.data[key].FBid = key;
+					tryLaterArr.push(data.data[key]);
+				});
+				resolve(tryLaterArr);
+			})
+			.catch( (err) => {
+				reject(err);
+			});
+		});
+	};
+
+	return { addToEatLater, removeFromSavelist, getSavedlist, fetchAPISuggestions, fetchMoreSuggestions, addToBlacklist, getBlacklist, removeFromBlacklist, getPlaceDetails };
 });
 
 
