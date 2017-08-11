@@ -126,6 +126,7 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 		let newReject = $scope.currentSuggestion.id;
 		rejectsArray.push(newReject);
 		console.log("rejects ", rejectsArray);
+		$scope.details = false;
 	};
 
 	$scope.blacklistSuggestion = (place_id, vicinity, locName) => {
