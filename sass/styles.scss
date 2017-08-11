@@ -1,0 +1,64 @@
+@import '../lib/node_modules/bootstrap/scss/bootstrap.scss';
+@import '../lib/node_modules/tether/dist/css/tether.min.css';
+
+
+.restDisp {
+	text-align: left;
+	margin-left: 30px;
+	color: white;
+	text-shadow:1px 1px 0 black,
+		-1px -1px 0 black,
+		1px -1px 0 black,
+		-1px 1px 0 black,
+		0px 1px 0 black,
+		1px 0px 0 black,
+		0px -1px 0 black,
+		-1px 0px 0 black 
+}
+
+.restaurantDisp {
+	background-repeat: no-repeat;
+	background-image: cover;
+	height: 382px;
+}
+
+.frontScr {
+	margin-left: 1em;
+}
+
+.frontscreen {
+	background-image: url('../lib/images/napkinview.jpg');
+	background-repeat: no-repeat;
+	background-image: cover;
+	background-image: center;
+	height: 274px;
+}
+
+.endscreen {
+	background-image: url('../lib/images/tableview.jpg');
+	background-repeat: no-repeat;
+	background-image: cover;
+	background-image: center;
+	height: 355px;
+}
+
+.title{
+	text-align: center;
+		text-shadow:1px 1px 0 white,
+		-1px -1px 0 white,
+		1px -1px 0 white,
+		-1px 1px 0 white,
+		0px 1px 0 white,
+		1px 0px 0 white,
+		0px -1px 0 white,
+		-1px 0px 0 white 
+}
+
+.btn-orange {
+	background-color: #f08f18;
+}
+
+.btn-teal {
+	background-color: #06717d;
+
+}

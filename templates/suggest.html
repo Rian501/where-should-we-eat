@@ -1,19 +1,20 @@
-<h1>START NEW SESSION SCREEN AND ALSO SHOW EACH SUGGESTION</h1>
-<!-- maybe get location on load and then use a button to kick off suggestions? -->
+<div ng-include="getInclude()"></div>
+
 <div ng-init="initSuggestionsArray()"></div>
 
-		<button ng-click="showNewSuggestion(); moreSuggestions(); rejectSuggestion()">Make a new suggestion!</button>
-		<p>Suggestions should go here:</p>
-		<div data-place-id={{currentSuggestion.id}}>
-			<h1>{{currentSuggestion.name}}</h1>
-			<!-- need a separate API call for photo ref -->
-			<p>Price level: {{currentSuggestion.price_level}}</p>
-			<p>Avg. Rating: {{currentSuggestion.rating}}</p>
-			<p>Address: {{currentSuggestion.vicinity}}</p>
-			<img src="{{currentSuggestion.photoUrl}}">
-			<button>Reject</button>
-			<button ng-click="blacklistSuggestion(currentSuggestion.id)">NEVER</button>
-			<button>Accept</button>
-			<button ng-click="logout()">LogOut</button>
+<div class="container">
+	<div class="row align-items-start">
+	</div>
+	<div data-place-id={{currentSuggestion.id}} ng-style="{'background-image': 'url(' + currentSuggestion.photoUrl + ')'}" class="restaurantDisp row align-items-center">
+		<div class="row"><h1 class="restDisp restName">{{currentSuggestion.name}}</h1></div>
+		<div class="row"><h4 class="restDisp restDetail">Price level: {{currentSuggestion.price_level}}<br>Avg. Rating: {{currentSuggestion.rating}}
+		<br>Address: {{currentSuggestion.vicinity}}</h4></div>	
+    </div>
+    <div class="row align-items-end buttons" ng-show="defReady()">
+		<button type="button" class="btn btn-orange btn-lg btn-block" ng-click="showNewSuggestion(); moreSuggestions(); rejectSuggestion()">Make a New Suggestion!</button>
+		<button ng-show="ifUser()" type="button" class="btn btn-danger btn-lg btn-block" ng-click="blacklistSuggestion(currentSuggestion.id, currentSuggestion.vicinity, currentSuggestion.name)">I hate that place</button>
+		<button ng-click="finishSession()" type="button" class="btn btn-teal btn-lg btn-block">I want to go to there</button>
+		<button ng-show="ifUser()" ng-click="saveForLater(currentSuggestion.id, currentSuggestion.vicinity, currentSuggestion.name)" type="button" class="btn btn-info btn-lg btn-block">Maybe next time</button>
+    </div>
 
-		</div>
+</div>

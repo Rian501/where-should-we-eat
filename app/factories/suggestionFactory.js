@@ -3,10 +3,14 @@
 eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseUrl) {
 
 	var config = {
-		apiKey: GoogleCreds.apiKey
+		placesAPI: GoogleCreds.PlacesApiKey,
+		placesAPI2: GoogleCreds.PlacesApiKey2,
+		directionsAPI: GoogleCreds.DirectionsApiKey
 	};
 	
-	let API = config.apiKey;
+	let placesAPI = config.placesAPI;
+	let placesAPI2 = config.placesAPI2;
+	let directionsAPI = config.directionsAPI;
 	let nextPageToken = null;
 
 	let fetchAPISuggestions = (userLat, userLon, radiusM) => {
@@ -17,7 +21,7 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 			//opennow parameter auto filters results for currently open stuff
 			//type restaurant can be changed...
 			//keyword can also be adjusted for filtering..?
-			$http.get(`https://emlemproxy.herokuapp.com/api/places/nearbysearch/json?location=${userLat},${userLon}&radius=${radiusM}&opennow=true&type=restaurant&keyword=food&key=${API}`)
+			$http.get(`https://emlemproxy.herokuapp.com/api/places/nearbysearch/json?location=${userLat},${userLon}&radius=${radiusM}&opennow=true&type=restaurant&keyword=food&key=${placesAPI2}`)
 			.then( (placesData) => {
 				//the nextpagetoken is part of the object for the first page of results
 				console.log("places??", placesData.data);
@@ -29,37 +33,37 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 	};
 
 //new function for when user clicks next thingy.
+	let moreCounter = 0;
 	let fetchMoreSuggestions = () => {
+		if (moreCounter < 3) {
+			return $q( (resolve, reject) => {
+				console.log("page token?", nextPageToken);
+				$http.get(`https://emlemproxy.herokuapp.com/api/places/nearbysearch/json?pagetoken=${nextPageToken}&key=${placesAPI2}`)
+				.then( (placesDataII) => {
+					console.log("places II??", placesDataII);
+					nextPageToken = placesDataII.data.next_page_token;
+					moreCounter += 1;
+					resolve(placesDataII);
+				});
+			});
+			
+		}
+	};
+
+	let getDirections = (userLat, userLon, destID) => {
 		return $q( (resolve, reject) => {
-			console.log("page token?", nextPageToken);
-			console.log("API long", GoogleCreds.apiKey);
-			console.log("API short", API);
-			$http.get(`https://emlemproxy.herokuapp.com/api/places/nearbysearch/json?pagetoken=${nextPageToken}&key=${API}`)
-			.then( (placesDataII) => {
-				console.log("places II??", placesDataII);
-				nextPageToken = placesDataII.data.next_page_token;
-				resolve(placesDataII);
+			$http.get(`https://emlemproxy.herokuapp.com/api/directions/json?origin=${userLat},${userLon}&destination=place_id:${destID}&key=${directionsAPI}`);
+		});
+	};
+
+	let getPlaceDetails = (place_id) => {
+		return $q( (resolve, reject) => {
+			$http.get(`https://emlemproxy.herokuapp.com/api/places/details/json?placeid=${place_id}&key=${placesAPI2}`)
+			.then( (detailsData) => {
+				resolve(detailsData.data.result);
 			});
 		});
 	};
-	//need to use token?? to get more results (next page, for example)
-	//build an array in factory? filter by Open Now here? This is fundamental, so perhaps..
-	//or in controller. Perhaps here build an array of open now, then filter by user stuff
-	//in controller.
-//it is not permitted to preload all 60, so a user action will need to trigger the first pagetoken reload.... separate function probably, with the first setting the value of the npt, and then the function being called on the first user reject click? this is more in line with the intended use of the api.
-
-
- //  let getOnePhoto = (photomaxwidth, photoref) => {
-	// return $q( (resolve, reject) => {
-	// 		//opennow parameter auto filters results for currently open stuff
-	// 		//type restaurant can be changed...
-	// 		//keyword can also be adjusted for filtering..?
-	// 		$http.get(`https://emlemproxy.herokuapp.com/api/places/photo?maxwidth=${photomaxwidth}&photoreference=${photoref}&key=${API}`)
-	// 		.then( (photoData) => {
-	// 			console.log("photo data", photoData);
-	// 		});
-	// });
- //  };
 
 	let addToBlacklist = (nopeObj) => {
 		return $q( (resolve, reject) => {
@@ -71,6 +75,52 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 			.catch( (err) => {
 				reject(err);
 			});
+		});
+	};
+
+	let addToEatLater = (laterObj) => {
+		return $q( (resolve, reject) => {
+			$http.post(`${FirebaseUrl}trylater.json`,
+				angular.toJson(laterObj))
+			.then( (response) => {
+				resolve(response);
+			})
+			.catch( (err) => {
+				reject(err);
+			});
+		});
+	};
+
+	let removeFromBlacklist = (FBkey) => {
+		return $q( (resolve, reject) => {
+			if (FBkey) {
+				$http.delete(`${FirebaseUrl}blacklist/${FBkey}.json`)
+				.then( (data) => {
+					resolve(data);
+				})
+				.catch( (err) => {
+						reject(err);
+					});
+			} else {
+				console.log("There was a mistake trying to delete this place!");
+			}
+		});
+	};
+
+
+	let removeFromSavelist = (FBkey) => {
+		return $q( (resolve, reject) => {
+			if (FBkey) {
+				$http.delete(`${FirebaseUrl}trylater/${FBkey}.json`)
+				.then( (data) => {
+					resolve(data);
+				})
+				.catch( (err) => {
+						reject(err);
+					});
+			} else {
+				console.log("There was a mistake trying to delete this place!");
+			}
 		});
 	};
 
@@ -93,7 +143,26 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 		});
 	};
 
-	return { fetchAPISuggestions, fetchMoreSuggestions, addToBlacklist, getBlacklist };
+	let getSavedlist = (uid) => {
+		//get the objects on FB that match the UID
+		return $q( (resolve, reject) => {
+			$http.get(`${FirebaseUrl}trylater.json?orderBy="uid"&equalTo="${uid}"`)
+			.then( (data) => {
+				let tryLaterArr = [];
+				console.log("data from try later?", data);
+				Object.keys(data.data).forEach( (key) => {
+					data.data[key].FBid = key;
+					tryLaterArr.push(data.data[key]);
+				});
+				resolve(tryLaterArr);
+			})
+			.catch( (err) => {
+				reject(err);
+			});
+		});
+	};
+
+	return { addToEatLater, removeFromSavelist, getSavedlist, fetchAPISuggestions, fetchMoreSuggestions, addToBlacklist, getBlacklist, removeFromBlacklist, getPlaceDetails };
 });
 
 

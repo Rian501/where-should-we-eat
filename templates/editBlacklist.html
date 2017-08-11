@@ -1,5 +1,26 @@
+<div ng-include="'templates/userNav.html'"></div>
+
 <div>
+	<h1>Saved Locations</h1>
+	<p>These locations have been flagged for later exploration. In the mood for any of these?</p>
 	<ul>
-		<li ng-repeat="item in blacklistArray"></li>
+		<li ng-repeat="item in savedListArray">
+			<h2>{{item.name}}</h2>
+			<p>{{item.address}}</p>
+			<button ng-click="removeFromSaved(item.FBid)">Remove from Saved Locations</button>
+		</li>
 	</ul>
 </div>
+
+<div>
+	<h1>Blacklisted Items</h1>
+	<p>These locations will never appear in your suggestions.</p>
+	<ul>
+		<li ng-repeat="item in blacklistArray">
+			<h2>{{item.name}}</h2>
+			<p>{{item.address}}</p>
+			<button ng-click="removeFromBlacklist(item.FBid)">Remove from Blacklist</button>
+		</li>
+	</ul>
+</div>
+<a href='#!/user/suggest'><button>Restart Suggestions</button></a>

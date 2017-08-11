@@ -1,0 +1,13 @@
+'use strict';
+
+eatsApp.controller('FinishedController', function ($scope, $window, $routeParams, UserFactory, SuggestionsFactory, GoogleCreds) {
+
+	$scope.getInclude = () => {
+	    if(UserFactory.getUser()){
+	        return "templates/userNav.html";
+	    } else {
+		    return "templates/noUserNav.html";
+	    }
+	};
+	
+});

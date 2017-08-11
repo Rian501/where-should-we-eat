@@ -58,6 +58,19 @@ eatsApp.factory('UserFactory', function($q, $http, $window, FirebaseUrl, FBCreds
 	    });
 	};
 
+	let getDay = () => {
+		//0 is Sunday in this model, but I want 0 to be Mon and 6 to be Sun
+		let today=null;
+		var d = new Date();
+		var n = d.getDay();
+		if (n !== 0) {
+			let today = n-1;
+		} else {
+			let today = 6;
+		}
+		return today;
+	};
+
 	let getUser = () => {
 		console.log("currentUser", currentUser);
 		return currentUser;
@@ -73,6 +86,6 @@ eatsApp.factory('UserFactory', function($q, $http, $window, FirebaseUrl, FBCreds
 
 	
 
-return { loginUser, isAuthenticated, getUser, logoutUser, locateUser };
+return { loginUser, isAuthenticated, getUser, logoutUser, locateUser, getDay };
 
 });

@@ -18,4 +18,9 @@ firebase.auth().onAuthStateChanged(function(user) {
             $window.location.href = '#!/user/suggest';
         });
     };
+
+    $scope.guestUser = () => {
+        $window.location.href = '#!/guest/suggest';
+    };
+    
 });
