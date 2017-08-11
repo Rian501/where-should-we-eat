@@ -45,7 +45,6 @@ eatsApp.factory('UserFactory', function($q, $http, $window, FirebaseUrl, FBCreds
 
 	let locateUser = () => {
 		return $q( (resolve, reject) => {
-			console.log("locating user");
 			if (navigator.geolocation) {
 		      navigator.geolocation.getCurrentPosition(function(position) {
 				    userLoc.lat = position.coords.latitude;
@@ -64,15 +63,14 @@ eatsApp.factory('UserFactory', function($q, $http, $window, FirebaseUrl, FBCreds
 		var d = new Date();
 		var n = d.getDay();
 		if (n !== 0) {
-			let today = n-1;
+			today = n-1;
 		} else {
-			let today = 6;
+			today = 6;
 		}
 		return today;
 	};
 
 	let getUser = () => {
-		console.log("currentUser", currentUser);
 		return currentUser;
 	};
 

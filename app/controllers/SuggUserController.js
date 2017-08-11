@@ -3,6 +3,7 @@
 eatsApp.controller('SuggestionsUserController', function ($scope, $window, $routeParams, UserFactory, SuggestionsFactory, GoogleCreds) {
 
     let suggestionsArray = [];
+    let userLoc = {};
 
     $scope.ifUser = () => {
     	if(UserFactory.getUser()) {
@@ -33,12 +34,12 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 		UserFactory.locateUser()
 		.then( (data) => {
 			console.log("userLoc?", data);
-			SuggestionsFactory.fetchAPISuggestions(data.lat, data.lng, 8050)
+			userLoc.lat = data.lat;
+			userLoc.lng = data.lng;
+			SuggestionsFactory.fetchAPISuggestions(userLoc.lat, userLoc.lng, 7500)
 			.then( (results) => {
-			  	console.log("results!", results);
 			  	suggestionsArray = results;
 			  	checkSuggestions();
-			  		console.log("suggestions array", suggestionsArray);
 			  		return suggestionsArray;
 			  	})
 			.then( (suggestions) => {
@@ -49,7 +50,7 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 
 	$scope.moreSuggestions = () => {
 		//add more suggestions to the possible suggestions array
-		if (suggestionsArray.length < 10)  {
+		if (suggestionsArray.length < 30)  {
 			SuggestionsFactory.fetchMoreSuggestions()
 			.then( (data) => {
 				//concat the next page of results
@@ -74,17 +75,11 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 			$window.location.href = "!#/";
 		} else {
 		checkSuggestions();
-		console.log("suggestions array", suggestionsArray);
 		let rando = generateRandom(suggestionsArray);
 		$scope.currentSuggestion = suggestionsArray.slice(rando, rando+1)[0];
 		suggestionsArray.splice(rando, 1);
+		console.log("suggestionsArray", suggestionsArray);
 		console.log("current suggestion", $scope.currentSuggestion);
-
-		// SuggestionsFactory.getPlaceDetails($scope.currentSuggestion.place_id)
-		// .then( (details) => {
-		// 	console.log("details?", details);
-		// });
-		
 		if ($scope.currentSuggestion.photos !== undefined) {
 			let photoref = $scope.currentSuggestion.photos[0].photo_reference;
 			$scope.currentSuggestion.photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=500&photoreference=${photoref}&key=${GoogleCreds.PlacesApiKey}`;
@@ -94,12 +89,28 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 	  }
 	};
 
+	$scope.moreInfo = () => {
+		SuggestionsFactory.getPlaceDetails($scope.currentSuggestion.place_id)
+		.then( (details) => {
+			console.log("details?", details);
+			$scope.details = details;
+			$scope.today = UserFactory.getDay();
+		});
+		SuggestionsFactory.getDirections(userLoc.lat, userLoc.lng, $scope.currentSuggestion.place_id)
+		.then( (distData) => {
+			console.log("distData!!", distData);
+			$scope.distance = distData.distance;
+			$scope.duration = distData.duration;
+
+		});
+	};
+		
+
 	
 	let rejectsArray = [];
 
 	function buildBlacklist()  {
 		let currentUser = UserFactory.getUser();
-		console.log("currentUser", currentUser);
 		SuggestionsFactory.getBlacklist(currentUser)
 		.then( (listData) => {
 			console.log("blacklist", listData);
@@ -111,6 +122,7 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 		let newReject = $scope.currentSuggestion.id;
 		rejectsArray.push(newReject);
 		console.log("rejects ", rejectsArray);
+		$scope.details = false;
 	};
 
 	$scope.blacklistSuggestion = (place_id, vicinity, locName) => {
@@ -136,7 +148,6 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 				}
 			}
 		});
-		console.log("current state of rejects array", rejectsArray);
 	}
 
 	$scope.finishSession = ()  => {
