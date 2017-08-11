@@ -45,7 +45,6 @@ eatsApp.factory('UserFactory', function($q, $http, $window, FirebaseUrl, FBCreds
 
 	let locateUser = () => {
 		return $q( (resolve, reject) => {
-			console.log("locating user");
 			if (navigator.geolocation) {
 		      navigator.geolocation.getCurrentPosition(function(position) {
 				    userLoc.lat = position.coords.latitude;

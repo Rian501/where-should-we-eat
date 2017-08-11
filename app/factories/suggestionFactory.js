@@ -14,8 +14,6 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 	let nextPageToken = null;
 
 	let fetchAPISuggestions = (userLat, userLon, radiusM) => {
-		console.log("userLat", userLat);
-		console.log("userLon", userLon);
 		console.log("radius", radiusM);
 		return $q( (resolve, reject) => {
 			//opennow parameter auto filters results for currently open stuff
@@ -24,8 +22,6 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 			$http.get(`https://emlemproxy.herokuapp.com/api/places/nearbysearch/json?location=${userLat},${userLon}&radius=${radiusM}&opennow=true&type=restaurant&keyword=food&key=${placesAPI2}`)
 			.then( (placesData) => {
 				//the nextpagetoken is part of the object for the first page of results
-				console.log("places??", placesData.data);
-				console.log("page token?", placesData.data.next_page_token);
 				nextPageToken = placesData.data.next_page_token;
 				resolve(placesData.data.results);
 			});
@@ -37,7 +33,6 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 	let fetchMoreSuggestions = () => {
 		if (moreCounter < 3) {
 			return $q( (resolve, reject) => {
-				console.log("page token?", nextPageToken);
 				$http.get(`https://emlemproxy.herokuapp.com/api/places/nearbysearch/json?pagetoken=${nextPageToken}&key=${placesAPI2}`)
 				.then( (placesDataII) => {
 					console.log("places II??", placesDataII);
@@ -52,13 +47,8 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 
 	let getDirections = (userLat, userLon, destID) => {
 		return $q( (resolve, reject) => {
-			console.log("inside getDirections, lat", userLat);
-			console.log("inside getDirections, lon", userLon);
-			console.log("inside getDirections, destID", destID);
 			$http.get(`https://emlemproxy.herokuapp.com/api/distance/json?origin=${userLat},${userLon}&destination=place_id:${destID}&key=${directionsAPI}`)
 			.then( (data) => {
-				console.log("data from getDirection", data.data.routes[0].legs[0]);
-				console.log("distance? data from getDirection", data.data.routes[0].legs[0].distance.text);
 				resolve(data.data.routes[0].legs[0]);
 			});
 		});
@@ -138,7 +128,6 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 			$http.get(`${FirebaseUrl}blacklist.json?orderBy="uid"&equalTo="${uid}"`)
 			.then( (data) => {
 				let blacklistArr = [];
-				console.log("data from getBlacklist?", data);
 				Object.keys(data.data).forEach( (key) => {
 					data.data[key].FBid = key;
 					blacklistArr.push(data.data[key]);

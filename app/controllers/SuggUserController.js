@@ -38,7 +38,6 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 			userLoc.lng = data.lng;
 			SuggestionsFactory.fetchAPISuggestions(userLoc.lat, userLoc.lng, 7500)
 			.then( (results) => {
-			  	console.log("results!", results);
 			  	suggestionsArray = results;
 			  	checkSuggestions();
 			  		console.log("suggestions array", suggestionsArray);
@@ -52,7 +51,7 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 
 	$scope.moreSuggestions = () => {
 		//add more suggestions to the possible suggestions array
-		if (suggestionsArray.length < 10)  {
+		if (suggestionsArray.length < 30)  {
 			SuggestionsFactory.fetchMoreSuggestions()
 			.then( (data) => {
 				//concat the next page of results
@@ -77,10 +76,11 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 			$window.location.href = "!#/";
 		} else {
 		checkSuggestions();
-		console.log("suggestions array", suggestionsArray);
 		let rando = generateRandom(suggestionsArray);
 		$scope.currentSuggestion = suggestionsArray.slice(rando, rando+1)[0];
 		suggestionsArray.splice(rando, 1);
+		console.log("suggestionsArray", suggestionsArray);
+		console.log("rejects array", rejectsArray);
 		console.log("current suggestion", $scope.currentSuggestion);
 		if ($scope.currentSuggestion.photos !== undefined) {
 			let photoref = $scope.currentSuggestion.photos[0].photo_reference;
@@ -97,7 +97,6 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 			console.log("details?", details);
 			$scope.details = details;
 			$scope.today = UserFactory.getDay();
-			console.log("today? Monday is 0, count from there", $scope.today);
 		});
 		SuggestionsFactory.getDirections(userLoc.lat, userLoc.lng, $scope.currentSuggestion.place_id)
 		.then( (distData) => {
@@ -114,7 +113,6 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 
 	function buildBlacklist()  {
 		let currentUser = UserFactory.getUser();
-		console.log("currentUser", currentUser);
 		SuggestionsFactory.getBlacklist(currentUser)
 		.then( (listData) => {
 			console.log("blacklist", listData);
@@ -152,7 +150,6 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 				}
 			}
 		});
-		console.log("current state of rejects array", rejectsArray);
 	}
 
 	$scope.finishSession = ()  => {
