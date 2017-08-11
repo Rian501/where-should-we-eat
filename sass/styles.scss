@@ -1,5 +1,7 @@
 @import '../lib/node_modules/bootstrap/scss/bootstrap.scss';
 @import '../lib/node_modules/tether/dist/css/tether.min.css';
+@fa-font-path:   "../font";
+
 
 
 .restDisp {
@@ -64,5 +66,9 @@
 }
 
 .moreInfo {
+}
+
+.moreInfoPlz {
 	margin: auto;
+	background-color: #ffe;
 }

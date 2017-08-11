@@ -9,7 +9,7 @@
 		<div class="row"><h1 class="restDisp restName">{{currentSuggestion.name}}</h1></div>
 		<div class="row"><h4 class="restDisp restDetail">Price level: {{currentSuggestion.price_level}}<br>Avg. Rating: {{currentSuggestion.rating}}
 		<br>Address: {{currentSuggestion.vicinity}}</h4></div>
-		<div class="row moreInfo" ng-click="moreInfo()">More information please</div> 	
+		<div class="row moreInfoPlz" ng-click="moreInfo()"><p><i class="fa fa-angle-double-down" aria-hidden="true"></i>   More information please   <i class="fa fa-angle-double-down" aria-hidden="true"></i></p></div> 	
     </div>
     <div ng-show="details" class="moreInfoDisplay">
 	    <p>Distance: On the roads, that's {{distance.text}}les, a drive of about {{duration.text}}.</p>
