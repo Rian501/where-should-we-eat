@@ -40,7 +40,6 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 			.then( (results) => {
 			  	suggestionsArray = results;
 			  	checkSuggestions();
-			  		console.log("suggestions array", suggestionsArray);
 			  		return suggestionsArray;
 			  	})
 			.then( (suggestions) => {
