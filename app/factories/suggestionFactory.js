@@ -52,7 +52,15 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 
 	let getDirections = (userLat, userLon, destID) => {
 		return $q( (resolve, reject) => {
-			$http.get(`https://emlemproxy.herokuapp.com/api/directions/json?origin=${userLat},${userLon}&destination=place_id:${destID}&key=${directionsAPI}`);
+			console.log("inside getDirections, lat", userLat);
+			console.log("inside getDirections, lon", userLon);
+			console.log("inside getDirections, destID", destID);
+			$http.get(`https://emlemproxy.herokuapp.com/api/distance/json?origin=${userLat},${userLon}&destination=place_id:${destID}&key=${directionsAPI}`)
+			.then( (data) => {
+				console.log("data from getDirection", data.data.routes[0].legs[0]);
+				console.log("distance? data from getDirection", data.data.routes[0].legs[0].distance.text);
+				resolve(data.data.routes[0].legs[0]);
+			});
 		});
 	};
 
@@ -162,7 +170,7 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 		});
 	};
 
-	return { addToEatLater, removeFromSavelist, getSavedlist, fetchAPISuggestions, fetchMoreSuggestions, addToBlacklist, getBlacklist, removeFromBlacklist, getPlaceDetails };
+	return { addToEatLater, removeFromSavelist, getSavedlist, fetchAPISuggestions, fetchMoreSuggestions, addToBlacklist, getBlacklist, removeFromBlacklist, getPlaceDetails, getDirections };
 });
 
 

@@ -3,6 +3,7 @@
 eatsApp.controller('SuggestionsUserController', function ($scope, $window, $routeParams, UserFactory, SuggestionsFactory, GoogleCreds) {
 
     let suggestionsArray = [];
+    let userLoc = {};
 
     $scope.ifUser = () => {
     	if(UserFactory.getUser()) {
@@ -33,7 +34,9 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 		UserFactory.locateUser()
 		.then( (data) => {
 			console.log("userLoc?", data);
-			SuggestionsFactory.fetchAPISuggestions(data.lat, data.lng, 8050)
+			userLoc.lat = data.lat;
+			userLoc.lng = data.lng;
+			SuggestionsFactory.fetchAPISuggestions(userLoc.lat, userLoc.lng, 7500)
 			.then( (results) => {
 			  	console.log("results!", results);
 			  	suggestionsArray = results;
@@ -95,6 +98,13 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 			$scope.details = details;
 			$scope.today = UserFactory.getDay();
 			console.log("today? Monday is 0, count from there", $scope.today);
+		});
+		SuggestionsFactory.getDirections(userLoc.lat, userLoc.lng, $scope.currentSuggestion.place_id)
+		.then( (distData) => {
+			console.log("distData!!", distData);
+			$scope.distance = distData.distance;
+			$scope.duration = distData.duration;
+
 		});
 	};
 		

@@ -63,19 +63,15 @@ eatsApp.factory('UserFactory', function($q, $http, $window, FirebaseUrl, FBCreds
 		let today=null;
 		var d = new Date();
 		var n = d.getDay();
-		console.log("today with 0 as Sunday", n);
 		if (n !== 0) {
 			today = n-1;
 		} else {
 			today = 6;
 		}
-		console.log("n as today", n);
-		console.log("today as today with Monday 0", today);
 		return today;
 	};
 
 	let getUser = () => {
-		console.log("currentUser", currentUser);
 		return currentUser;
 	};
 
