@@ -79,12 +79,6 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 		$scope.currentSuggestion = suggestionsArray.slice(rando, rando+1)[0];
 		suggestionsArray.splice(rando, 1);
 		console.log("current suggestion", $scope.currentSuggestion);
-
-		// SuggestionsFactory.getPlaceDetails($scope.currentSuggestion.place_id)
-		// .then( (details) => {
-		// 	console.log("details?", details);
-		// });
-		
 		if ($scope.currentSuggestion.photos !== undefined) {
 			let photoref = $scope.currentSuggestion.photos[0].photo_reference;
 			$scope.currentSuggestion.photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=500&photoreference=${photoref}&key=${GoogleCreds.PlacesApiKey}`;
@@ -93,6 +87,17 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 		}
 	  }
 	};
+
+	$scope.moreInfo = () => {
+		SuggestionsFactory.getPlaceDetails($scope.currentSuggestion.place_id)
+		.then( (details) => {
+			console.log("details?", details);
+			$scope.details = details;
+			$scope.today = UserFactory.getDay();
+			console.log("today? Monday is 0, count from there", $scope.today);
+		});
+	};
+		
 
 	
 	let rejectsArray = [];

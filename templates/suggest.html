@@ -8,7 +8,14 @@
 	<div data-place-id={{currentSuggestion.id}} ng-style="{'background-image': 'url(' + currentSuggestion.photoUrl + ')'}" class="restaurantDisp row align-items-center">
 		<div class="row"><h1 class="restDisp restName">{{currentSuggestion.name}}</h1></div>
 		<div class="row"><h4 class="restDisp restDetail">Price level: {{currentSuggestion.price_level}}<br>Avg. Rating: {{currentSuggestion.rating}}
-		<br>Address: {{currentSuggestion.vicinity}}</h4></div>	
+		<br>Address: {{currentSuggestion.vicinity}}</h4></div>
+		<div class="row moreInfo" ng-click="moreInfo()">More information please</div> 	
+    </div>
+    <div ng-show="details" class="moreInfoDisplay">
+    	<p>Hours today: {{details.opening_hours.weekday_text[today]}}</p>
+    	<p></p>
+
+
     </div>
     <div class="row align-items-end buttons" ng-show="defReady()">
 		<button type="button" class="btn btn-orange btn-lg btn-block" ng-click="showNewSuggestion(); moreSuggestions(); rejectSuggestion()">Make a New Suggestion!</button>
