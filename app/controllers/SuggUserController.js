@@ -80,7 +80,6 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 		$scope.currentSuggestion = suggestionsArray.slice(rando, rando+1)[0];
 		suggestionsArray.splice(rando, 1);
 		console.log("suggestionsArray", suggestionsArray);
-		console.log("rejects array", rejectsArray);
 		console.log("current suggestion", $scope.currentSuggestion);
 		if ($scope.currentSuggestion.photos !== undefined) {
 			let photoref = $scope.currentSuggestion.photos[0].photo_reference;
