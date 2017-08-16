@@ -3,6 +3,7 @@
 eatsApp.controller('SuggestionsUserController', function ($scope, $window, $routeParams, UserFactory, SuggestionsFactory, GoogleCreds) {
 
     let suggestionsArray = [];
+    let favesArray = [];
     let userLoc = {};
 
     $scope.ifUser = () => {
@@ -50,7 +51,7 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 
 	$scope.moreSuggestions = () => {
 		//add more suggestions to the possible suggestions array
-		if (suggestionsArray.length < 30)  {
+		if (suggestionsArray.length < 20)  {
 			SuggestionsFactory.fetchMoreSuggestions()
 			.then( (data) => {
 				//concat the next page of results
@@ -70,9 +71,14 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 	let today = UserFactory.getDay();
 
 	$scope.showNewSuggestion = () => {
+		let faveMatch = false;
+		faveMatch = checkForFaves();
 		if (suggestionsArray.length === 1) {
 			$window.alert("Picky picky! You have rejected all results. Please try again.");
 			$window.location.href = "!#/";
+		} else if (faveMatch) {
+			$scope.currentSuggestion = faveMatch;
+			//if a suggestion in the array matches something in the save for later array, push it to the current suggestion
 		} else {
 		checkSuggestions();
 		let rando = generateRandom(suggestionsArray);
@@ -106,10 +112,29 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 	};
 		
 
-	
 	let rejectsArray = [];
 
-	function buildBlacklist()  {
+	function buildFaveslist()  {
+		let currentUser = UserFactory.getUser();
+		SuggestionsFactory.getSavedlist(currentUser)
+		.then( (listData) => {
+			console.log("faves?", listData);
+			favesArray = favesArray.concat(listData);
+		});
+	}
+
+	function checkForFaves() {
+		favesArray.forEach(function(item) {
+			for (let i = 0; i < suggestionsArray.length; i++) {
+				if (item.place_id == suggestionsArray[i].id) {
+					console.log("favedetector?", suggestionsArray[i]);
+					return suggestionsArray[i];
+				}
+			}
+		});
+	}
+	
+		function buildBlacklist()  {
 		let currentUser = UserFactory.getUser();
 		SuggestionsFactory.getBlacklist(currentUser)
 		.then( (listData) => {
@@ -149,6 +174,7 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 			}
 		});
 	}
+
 
 	$scope.finishSession = ()  => {
 		$window.location.href = '#!/done';

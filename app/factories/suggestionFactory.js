@@ -31,7 +31,7 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 //new function for when user clicks next thingy.
 	let moreCounter = 0;
 	let fetchMoreSuggestions = () => {
-		if (moreCounter < 3) {
+		if (moreCounter < 5) {
 			return $q( (resolve, reject) => {
 				$http.get(`https://emlemproxy.herokuapp.com/api/places/nearbysearch/json?pagetoken=${nextPageToken}&key=${placesAPI2}`)
 				.then( (placesDataII) => {
@@ -158,6 +158,7 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 			});
 		});
 	};
+
 
 	return { addToEatLater, removeFromSavelist, getSavedlist, fetchAPISuggestions, fetchMoreSuggestions, addToBlacklist, getBlacklist, removeFromBlacklist, getPlaceDetails, getDirections };
 });
