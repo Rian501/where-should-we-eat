@@ -72,11 +72,11 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 
 	$scope.showNewSuggestion = () => {
 		let faveMatch = false;
-		faveMatch = checkForFaves();
-		if (suggestionsArray.length === 1) {
+		if (suggestionsArray.length === 0) {
 			$window.alert("Picky picky! You have rejected all results. Please try again.");
 			$window.location.href = "!#/";
-		} else if (faveMatch) {
+		} else if (checkForFaves()) {
+			faveMatch = checkForFaves();
 			$scope.currentSuggestion = faveMatch;
 			//if a suggestion in the array matches something in the save for later array, push it to the current suggestion
 		} else {
@@ -129,6 +129,8 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 				if (item.place_id == suggestionsArray[i].id) {
 					console.log("favedetector?", suggestionsArray[i]);
 					return suggestionsArray[i];
+				} else {
+					return false;
 				}
 			}
 		});
