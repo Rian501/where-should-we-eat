@@ -1,12 +1,16 @@
 <div ng-include="'templates/NoUserNav.html'"></div>
-<div>
-	<div class="frontscreen">
+<div class="container">
+	<div class="frontscreen text-center">
 		<h1 class="title">Where Should We Eat?</h1>
-		<img class="img-fluid" src="../lib/images/napkin-view-slant.jpg" alt="frontscreen view, napkin">
-		<!-- use bg image and space it out a bit  -->
-		<p class="frontScr">An app for the chronically indecisive.</p>
-		<p class="frontScr">Log in as a user to access saved preferences.</p>
+		
+		<button type="button" class="login-button btn btn-orange btn-lg btn-block" ng-click="loginUser()">Log In</button>
+		<div>
+			<img class="low-z img-fluid" src="../lib/images/napkin-view-slant.jpg" alt="frontscreen view, napkin">
+			<!-- use bg image and space it out a bit  -->
+			<!-- <p class="frontScr">An app for the chronically indecisive.</p> -->
+			<p class="frontScr">Log in as a user to access saved preferences.</p>
+			
+		</div>
+		<button type="button" class="btn btn-teal btn-lg btn-block" ng-click="guestUser()">Use as Guest</button>
 	</div>
-	<button type="button" class="btn btn-orange btn-lg btn-block" ng-click="loginUser()">Log In</button>
-	<button type="button" class="btn btn-teal btn-lg btn-block" ng-click="guestUser()">Use as Guest</button>
 </div>
