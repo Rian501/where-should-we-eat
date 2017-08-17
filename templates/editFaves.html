@@ -8,12 +8,15 @@
 			<li ng-repeat="item in savedListArray">
 				<div class="separate row">
 					<h4 class="col">{{item.name}}</h2>
-					<button class="col btn btn-orange btn-sm" ng-click="removeFromSaved(item.FBid)">Remove from Saved Locations</button>
+					<div class="col">
+						<button class="btn faves-options btn-orange btn-sm" ng-click="removeFromSaved(item.FBid)">Remove from Saved Locations</button>
+						<button class="btn faves-options btn-teal btn-sm" ng-click="removeFromSaved(item.FBid)">Ready to try it. Send me there.</button>
+					</div>
 					<p class="col">{{item.address}}</p>
 					
 				</div>
 			</li>
 		</ul>
+	<a href='#!/user/suggest'><button class="btn btn-secondary btn-lg">Restart Suggestions</button></a>
 	</div>
-	<a href='#!/user/suggest'><button class="btn btn-primary btn-lg">Restart Suggestions</button></a>
 </div>
