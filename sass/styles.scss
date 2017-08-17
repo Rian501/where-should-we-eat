@@ -2,6 +2,10 @@
 @import '../lib/node_modules/tether/dist/css/tether.min.css';
 @fa-font-path:   "../font";
 
+$primary-color: #f08f18;
+$secondary-color: #06717d;
+$tertiary-color: #e2820f;
+$fourth-color: #509998;
 
 
 .restDisp {
@@ -28,20 +32,20 @@
 	margin-left: 1em;
 }
 
-.frontscreen {
-	background-image: url('../lib/images/napkinview.jpg');
-	background-repeat: no-repeat;
-	background-image: cover;
-	background-image: center;
-	height: 274px;
-}
+//.frontscreen {
+// 	background-image: url('../lib/images/napkin-view-slant.jpg');
+// 	background-repeat: no-repeat;
+// 	background-image: cover;
+// 	background-image: center;
+// 	height: 274px;
+// }
 
 .endscreen {
-	background-image: url('../lib/images/tableview.jpg');
-	background-repeat: no-repeat;
-	background-image: cover;
-	background-image: center;
-	height: 355px;
+	background-image: url('../lib/images/tableview.jpg') no-repeat center center;
+	//background-repeat: no-repeat;
+	//background-image: cover;
+	//background-image: center;
+	//height: 355px;
 }
 
 .title{

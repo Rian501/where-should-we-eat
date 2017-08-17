@@ -1,0 +1,14 @@
+<div ng-include="'templates/userNav.html'"></div>
+
+<div>
+	<h1>Saved Locations</h1>
+	<p>You said you've been meaning to try these places... In the mood for any of these?</p>
+	<ul>
+		<li ng-repeat="item in savedListArray">
+			<h2>{{item.name}}</h2>
+			<p>{{item.address}}</p>
+			<button ng-click="removeFromSaved(item.FBid)">Remove from Saved Locations</button>
+		</li>
+	</ul>
+</div>
+<a href='#!/user/suggest'><button>Restart Suggestions</button></a>
