@@ -12,9 +12,13 @@ eatsApp.controller('NavController', function ($scope, $window, $routeParams, Use
       });
   };
 
-  $scope.goLists = () => {
+  $scope.goBList = () => {
   	$window.location.href = "#!/user/edit";
   };
+
+  $scope.goFaves = () => {
+    $window.location.href = "#!/user/faves";
+  };  
 
 
 });

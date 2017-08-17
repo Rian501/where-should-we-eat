@@ -5,6 +5,7 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
     let suggestionsArray = [];
     let favesArray = [];
     let userLoc = {};
+    let radius = 7500;
 
     $scope.ifUser = () => {
     	if(UserFactory.getUser()) {
@@ -30,14 +31,14 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 	    }
 	};
 
-	$scope.initSuggestionsArray = () => {
+	$scope.initSuggestionsArray = (radius) => {
 		buildBlacklist();
 		UserFactory.locateUser()
 		.then( (data) => {
 			console.log("userLoc?", data);
 			userLoc.lat = data.lat;
 			userLoc.lng = data.lng;
-			SuggestionsFactory.fetchAPISuggestions(userLoc.lat, userLoc.lng, 7500)
+			SuggestionsFactory.fetchAPISuggestions(userLoc.lat, userLoc.lng, radius)
 			.then( (results) => {
 			  	suggestionsArray = results;
 			  	checkSuggestions();

@@ -2,7 +2,35 @@
 @import '../lib/node_modules/tether/dist/css/tether.min.css';
 @fa-font-path:   "../font";
 
+$primary-color: #f08f18;
+$secondary-color: #06717d;
+$tertiary-color: #e2820f;
+$fourth-color: #509998;
+$whiteish: #f0e6e1;
 
+
+.restaurant-photo {
+	max-height: 500px;
+}
+
+.more-btn {
+	//width: 85%;
+	margin-bottom:5px;
+}
+
+.full-width {
+	width: 105%;
+}
+
+.separate {
+	border: 1px solid $secondary-color;
+	border-radius: 5px;
+	margin-bottom: 5px;
+}
+
+ul {
+	list-style: none;
+}
 
 .restDisp {
 	text-align: left;
@@ -28,20 +56,29 @@
 	margin-left: 1em;
 }
 
-.frontscreen {
-	background-image: url('../lib/images/napkinview.jpg');
-	background-repeat: no-repeat;
-	background-image: cover;
-	background-image: center;
-	height: 274px;
+//.frontscreen {
+// 	background-image: url('../lib/images/napkin-view-slant.jpg');
+// 	background-repeat: no-repeat;
+// 	background-image: cover;
+// 	background-image: center;
+// 	height: 274px;
+// }
+
+.login-button {
+	margin-bottom: 20px;
+	margin-top: 5px;
 }
 
+// .low-z{
+// 	z-index: -20;
+// }
+
 .endscreen {
-	background-image: url('../lib/images/tableview.jpg');
-	background-repeat: no-repeat;
-	background-image: cover;
-	background-image: center;
-	height: 355px;
+	background-image: url('../lib/images/tableview.jpg') no-repeat center center;
+	//background-repeat: no-repeat;
+	//background-image: cover;
+	//background-image: center;
+	//height: 355px;
 }
 
 .title{
@@ -62,7 +99,12 @@
 
 .btn-teal {
 	background-color: #06717d;
+	color: $whiteish
 
+}
+
+.faves-options {
+	margin: 3px 0;
 }
 
 .moreInfo {
