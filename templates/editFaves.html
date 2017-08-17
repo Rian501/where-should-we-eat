@@ -2,13 +2,18 @@
 
 <div>
 	<h1>Saved Locations</h1>
-	<p>You said you've been meaning to try these places... In the mood for any of these?</p>
-	<ul>
-		<li ng-repeat="item in savedListArray">
-			<h2>{{item.name}}</h2>
-			<p>{{item.address}}</p>
-			<button ng-click="removeFromSaved(item.FBid)">Remove from Saved Locations</button>
-		</li>
-	</ul>
+	<p>You said you've been meaning to try these places... In the mood for any of them?</p>
+	<div class="container">
+		<ul>
+			<li ng-repeat="item in savedListArray">
+				<div class="separate row">
+					<h4 class="col">{{item.name}}</h2>
+					<button class="col btn btn-orange btn-sm" ng-click="removeFromSaved(item.FBid)">Remove from Saved Locations</button>
+					<p class="col">{{item.address}}</p>
+					
+				</div>
+			</li>
+		</ul>
+	</div>
+	<a href='#!/user/suggest'><button class="btn btn-primary btn-lg">Restart Suggestions</button></a>
 </div>
-<a href='#!/user/suggest'><button>Restart Suggestions</button></a>

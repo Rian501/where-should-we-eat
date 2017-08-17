@@ -40,8 +40,8 @@ eatsApp.config(($routeProvider)=>{
         resolve: {isAuth}
     })
     .when('/user/faves', {
-        templateUrl: 'templates/editBlacklist.html',
-        controller: 'BlacklistEditController',
+        templateUrl: 'templates/editFaves.html',
+        controller: 'SuggestionsFavesController',
         resolve: {isAuth}
     })
     .when('/done', {

@@ -22,6 +22,16 @@ $whiteish: #f0e6e1;
 	width: 105%;
 }
 
+.separate {
+	border: 1px solid $secondary-color;
+	border-radius: 5px;
+	margin-bottom: 5px;
+}
+
+ul {
+	list-style: none;
+}
+
 .restDisp {
 	text-align: left;
 	margin-left: 30px;
