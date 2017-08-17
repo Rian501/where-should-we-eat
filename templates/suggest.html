@@ -9,11 +9,11 @@
 		<div class="row"><h1 class="restDisp restName">{{currentSuggestion.name}}</h1></div>
 		<div class="row"><h4 class="restDisp restDetail">Price level: {{currentSuggestion.price_level}}<br>Avg. Rating: {{currentSuggestion.rating}}
 		<br>Address: {{currentSuggestion.vicinity}}</h4></div>
-		<div class="row moreInfo" ng-click="moreInfo()">More information please</div> 	
+		<div class="row moreInfoPlz" ng-click="moreInfo()"><p><i class="fa fa-angle-double-down" aria-hidden="true"></i>   More information please   <i class="fa fa-angle-double-down" aria-hidden="true"></i></p></div> 	
     </div>
     <div ng-show="details" class="moreInfoDisplay">
 	    <p>Distance: On the roads, that's {{distance.text}}les, a drive of about {{duration.text}}.</p>
-    	<p>Hours today: {{details.opening_hours.weekday_text[today]}}</p>
+    	<p>Hours today--{{details.opening_hours.weekday_text[today]}}</p>
     	<a href="{{details.url}}" target="_blank"target="_blank"><p>Open with GoogleMaps</p></a>
     	<a href="{{details.website}}" target="_blank"><p>Restaurant Website</p></a>
     </div>
@@ -21,7 +21,7 @@
 		<button type="button" class="btn btn-orange btn-lg btn-block" ng-click="showNewSuggestion(); moreSuggestions(); rejectSuggestion()">Make a New Suggestion!</button>
 		<button ng-show="ifUser()" type="button" class="btn btn-danger btn-lg btn-block" ng-click="blacklistSuggestion(currentSuggestion.id, currentSuggestion.vicinity, currentSuggestion.name)">I hate that place</button>
 		<button ng-click="finishSession()" type="button" class="btn btn-teal btn-lg btn-block">I want to go to there</button>
-		<button ng-show="ifUser()" ng-click="saveForLater(currentSuggestion.id, currentSuggestion.vicinity, currentSuggestion.name)" type="button" class="btn btn-info btn-lg btn-block">Maybe next time</button>
+		<button ng-show="ifUser()" ng-click="saveForLater(currentSuggestion.id, currentSuggestion.vicinity, currentSuggestion.name); rejectSuggestion()" type="button" class="btn btn-info btn-lg btn-block">Maybe next time</button>
     </div>
 
 </div>
