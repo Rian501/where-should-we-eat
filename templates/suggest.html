@@ -1,6 +1,6 @@
 <div ng-include="getInclude()"></div>
 
-<div ng-init="initSuggestionsArray(7500)"></div>
+<div ng-init="initSuggestionsArray(radius)"></div>
 
 <div class="container">
 		
@@ -23,15 +23,26 @@
 			<div class="row more-btn">
 				<button type="button" ng-click="moreInfo()" class="btn btn-secondary btn-sm full-width"><i class="fa fa-angle-double-down" aria-hidden="true"></i>   More information please   <i class="fa fa-angle-double-down" aria-hidden="true"></i></button>
 			</div>
-
-			<!-- <div class="row moreInfoPlz" ng-click="moreInfo()"><p><i class="fa fa-angle-double-down" aria-hidden="true"></i>   More information please   <i class="fa fa-angle-double-down" aria-hidden="true"></i></p></div> 	 -->
 		</div>
 	    <div ng-show="details" class="container moreInfoDisplay">
 		    <p>Distance: On the roads, that's {{distance.text}}les, a drive of about {{duration.text}}.</p>
 	    	<p>Hours today--{{details.opening_hours.weekday_text[today]}}</p>
 	    	<a href="{{details.url}}" target="_blank"target="_blank"><p>Open with GoogleMaps</p></a>
 	    	<a href="{{details.website}}" target="_blank"><p>Restaurant Website</p></a>
+	    	<p>Phone: <a href="tel:{{details.international_phone_number}}">{{details.formatted_phone_number}}</a></p>
+	    	<div class="row more-btn">
+	    		<button type="button" ng-click="reviewsMoreInfo()" class="btn btn-secondary btn-sm full-width"><i class="fa fa-angle-double-down" aria-hidden="true"></i>   Show User Reviews   <i class="fa fa-angle-double-down" aria-hidden="true"></i></button>
+	    	</div>
+	    	
 	    </div>
+        <div ng-show="reviews" class="container yetmoreInfoDisplay">
+    	    <h3>User Reviews</h3>
+    	    <div ng-repeat="review in reviews">
+    	    	<p><img class="review-pic" src="{{review.profile_photo_url}}">  {{review.rating}} stars. {{review.text}}</p>
+    	    	<p>-<a href="author_url">{{review.author_name}}</a>, {{review.relative_time_description}}</p>
+    	    </div>
+        </div>
+
 	    <div class="row align-items-end buttons" ng-show="defReady()">
 			<button type="button" class="btn btn-warning btn-lg btn-block" ng-click="showNewSuggestion(); moreSuggestions(); rejectSuggestion()">Make a New Suggestion!</button>
 			<button ng-show="ifUser()" type="button" class="btn btn-danger btn-lg btn-block" ng-click="blacklistSuggestion(currentSuggestion.id, currentSuggestion.vicinity, currentSuggestion.name)">I hate that place</button>

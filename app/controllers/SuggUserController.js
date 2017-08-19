@@ -5,7 +5,7 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
     let suggestionsArray = [];
     let favesArray = [];
     let userLoc = {};
-    let radius = 7500;
+    $scope.radius = 7500;
 
     $scope.ifUser = () => {
     	if(UserFactory.getUser()) {
@@ -38,6 +38,7 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 			console.log("userLoc?", data);
 			userLoc.lat = data.lat;
 			userLoc.lng = data.lng;
+			radius = $scope.radius;
 			SuggestionsFactory.fetchAPISuggestions(userLoc.lat, userLoc.lng, radius)
 			.then( (results) => {
 			  	suggestionsArray = results;
@@ -73,6 +74,8 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 
 	$scope.showNewSuggestion = () => {
 		let faveMatch = false;
+		$scope.reviews = false;
+		$scope.details = false;
 		if (suggestionsArray.length === 0) {
 			$window.alert("Picky picky! You have rejected all results. Please try again.");
 			$window.location.href = "!#/";
@@ -108,8 +111,15 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 			console.log("distData!!", distData);
 			$scope.distance = distData.distance;
 			$scope.duration = distData.duration;
-
 		});
+	};
+
+	// $scope.morePhotos = () => {
+
+	// };
+
+	$scope.reviewsMoreInfo = () => {
+		$scope.reviews = $scope.details.reviews;
 	};
 		
 
