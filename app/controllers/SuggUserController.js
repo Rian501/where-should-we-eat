@@ -74,8 +74,8 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 
 	$scope.showNewSuggestion = () => {
 		let faveMatch = false;
-		$scope.reviews = false;
-		$scope.details = false;
+		$scope.reviewsOpen = false;
+		$scope.detailsOpen = false;
 		if (suggestionsArray.length === 0) {
 			$window.alert("Picky picky! You have rejected all results. Please try again.");
 			$window.location.href = "!#/";
