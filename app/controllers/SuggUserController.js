@@ -189,8 +189,8 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 	}
 
 
-	$scope.finishSession = ()  => {
-		$window.location.href = '#!/done';
+	$scope.finishSession = (place_id)  => {
+		$window.location.href = `#!/done/${place_id}`;
 	};
 
 	$scope.saveForLater = (place_id, vicinity, locName) => {
