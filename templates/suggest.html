@@ -44,10 +44,10 @@
         </div>
 
 	    <div class="row align-items-end buttons" ng-show="defReady()">
-			<button type="button" class="btn btn-warning btn-lg btn-block" ng-click="showNewSuggestion(); moreSuggestions(); rejectSuggestion()">Make a New Suggestion!</button>
-			<button ng-show="ifUser()" type="button" class="btn btn-danger btn-lg btn-block" ng-click="blacklistSuggestion(currentSuggestion.id, currentSuggestion.vicinity, currentSuggestion.name)">I hate that place</button>
-			<button ng-click="finishSession(currentSuggestion.place_id)" type="button" class="btn btn-success btn-lg btn-block">I want to go to there</button>
-			<button ng-show="ifUser()" ng-click="saveForLater(currentSuggestion.id, currentSuggestion.vicinity, currentSuggestion.name); rejectSuggestion()" type="button" class="btn btn-info btn-lg btn-block">Save for next time</button>
+			<button type="button" class="btn btn-warning btn-lg btn-block" ng-click="showNewSuggestion(); moreSuggestions(); rejectSuggestion()">Not today!</button>
+			<button ng-show="ifUser()" type="button" class="btn btn-danger btn-lg btn-block" ng-click="blacklistSuggestion(currentSuggestion.id, currentSuggestion.vicinity, currentSuggestion.name)">Never.</button>
+			<button ng-click="finishSession(currentSuggestion.place_id)" type="button" class="btn btn-success btn-lg btn-block">Yes!</button>
+			<button ng-show="ifUser()" ng-click="saveForLater(currentSuggestion.place_id, currentSuggestion.vicinity, currentSuggestion.name); rejectSuggestion()" type="button" class="btn btn-info btn-lg btn-block">Maybe next time.</button>
 	    </div>
 	</div>
 </div>

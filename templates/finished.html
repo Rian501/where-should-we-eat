@@ -2,7 +2,8 @@
 <div ng-init="directions()"></div>
 <div class="endscreen container text-center">
 	<img src="../lib/images/table-view.jpg" class="img-fluid" alt="endscreen table view">
-<h1 class="title">Congratulations! You decided on something!</h1>
-<p><a href="{{details.url}}"><img width="30px" src="../lib/images/googlemaps.png">  Lead the way, Maps!</a></p>
-<h5>¯\_(シ)_/¯ Enjoy your meal!  ¯\_(ツ)_/¯</h5>
+<h1 class="title">Congratulations! You decided on something! {{details.name}}!</h1>
+<p>Need directions?<a href="{{details.url}}"><img width="30px" src="../lib/images/googlemaps.png">  Lead the way, Maps!</a></p>
+<p>Want to call ahead? <a href="tel:{{details.international_phone_number}}">{{details.formatted_phone_number}}</a></p>
+<h5>¯\_(シ)_/¯  Enjoy your meal!  ¯\_(ツ)_/¯</h5>
 </div> 
