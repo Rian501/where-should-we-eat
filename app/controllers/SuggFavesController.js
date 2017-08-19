@@ -17,4 +17,9 @@ eatsApp.controller('SuggestionsFavesController', function ($scope, $window, $rou
 		});
 	};
 
+	$scope.goToThere = (place_id) => {
+		console.log("place_id?", place_id);
+		$window.location.href = `#!/done/${place_id}`;  
+	};
+
 });

@@ -10,4 +10,14 @@ eatsApp.controller('FinishedController', function ($scope, $window, $routeParams
 	    }
 	};
 	
+	$scope.directions = () => {
+
+		SuggestionsFactory.getPlaceDetails($routeParams.place_id)
+			.then( (details) => {
+				console.log("details?", details);
+				$scope.details = details;
+			});
+	};
+
+
 });

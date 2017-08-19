@@ -44,7 +44,7 @@ eatsApp.config(($routeProvider)=>{
         controller: 'SuggestionsFavesController',
         resolve: {isAuth}
     })
-    .when('/done', {
+    .when('/done/:place_id', {
         templateUrl: 'templates/finished.html',
         controller: 'FinishedController',
     })

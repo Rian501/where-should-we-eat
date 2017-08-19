@@ -2,6 +2,8 @@
 @import '../lib/node_modules/tether/dist/css/tether.min.css';
 @fa-font-path:   "../font";
 
+$font-stack: 'Just Another Hand', cursive;
+
 $primary-color: #f08f18;
 $secondary-color: #06717d;
 $tertiary-color: #e2820f;
@@ -13,6 +15,10 @@ $whiteish: #f0e6e1;
 	max-height: 500px;
 }
 
+.review-pic {
+	height: 30px;
+	display: inline;
+}
 .more-btn {
 	//width: 85%;
 	margin-bottom:5px;

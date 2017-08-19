@@ -10,7 +10,7 @@
 					<h4 class="col">{{item.name}}</h2>
 					<div class="col">
 						<button class="btn faves-options btn-orange btn-sm" ng-click="removeFromSaved(item.FBid)">Remove from Saved Locations</button>
-						<button class="btn faves-options btn-teal btn-sm" ng-click="removeFromSaved(item.FBid)">Ready to try it. Send me there.</button>
+						<button class="btn faves-options btn-teal btn-sm" ng-click="goToThere(item.place_id)">Ready to try it. Send me there.</button>
 					</div>
 					<p class="col">{{item.address}}</p>
 					
