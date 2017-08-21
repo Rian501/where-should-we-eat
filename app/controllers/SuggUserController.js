@@ -82,12 +82,15 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 		} else if (checkForFaves()) {
 			faveMatch = checkForFaves();
 			$scope.currentSuggestion = faveMatch;
+			$scope.currentSuggestion.price = dollarSigns();
+
 			//if a suggestion in the array matches something in the save for later array, push it to the current suggestion
 		} else {
 		checkSuggestions();
 		let rando = generateRandom(suggestionsArray);
 		$scope.currentSuggestion = suggestionsArray.slice(rando, rando+1)[0];
 		suggestionsArray.splice(rando, 1);
+		$scope.currentSuggestion.price = dollarSigns();
 		console.log("suggestionsArray", suggestionsArray);
 		console.log("current suggestion", $scope.currentSuggestion);
 		if ($scope.currentSuggestion.photos !== undefined) {
@@ -98,6 +101,17 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 		}
 	  }
 	};
+
+	let dollars = '';
+	function dollarSigns() {
+		dollars = '';
+		console.log("currentSuggestion", $scope.currentSuggestion);
+		for (let j=0; j<$scope.currentSuggestion.price_level; j++) {
+			dollars += '$';
+		}
+			console.log("dollars", dollars);
+			return dollars;
+	}
 
 	$scope.moreInfo = () => {
 		SuggestionsFactory.getPlaceDetails($scope.currentSuggestion.place_id)
