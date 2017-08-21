@@ -2,11 +2,14 @@
   <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <a class="navbar-brand" href="#">¯\_(シ)_/¯</a>
+  <a class="navbar-brand caveat-font" href="#">¯\_(シ)_/¯</a>
   <div class="collapse navbar-collapse" id="navbarText">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
         <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="modal" data-target="#myModal" ng-click="showAbout = !showAbout">About the app</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" ng-click="goFaves()">Favorites</a>
@@ -23,3 +26,28 @@
     </span>
   </div>
 </nav>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">How it works</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>This app gets your location and finds restaurants in a five-mile radius that are currently open (please note that this is an absolute radius, and does not take roads or obstacles into account). To change your radius, scroll to the bottom of any suggestion. 30 miles max!</p>
+        <p>Since you are signed in as a user, you can save locations that you might like, and they will be shown early in the suggestions process next time you use the app. You can also save locations that you never want shown to you. Navigate to "favorites" for the former, and "blacklist" for the latter.</p>
+        <p>Good luck!</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

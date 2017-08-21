@@ -1,6 +1,6 @@
 'use strict';
 
-eatsApp.controller('SuggestionsUserController', function ($scope, $window, $routeParams, UserFactory, SuggestionsFactory, GoogleCreds) {
+eatsApp.controller('SuggestionsUserController', function ($scope, $sce, $window, $routeParams, UserFactory, SuggestionsFactory, GoogleCreds) {
 
     let suggestionsArray = [];
     let favesArray = [];
@@ -16,10 +16,10 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
     };
 
     $scope.defReady = () => {
-    	if (suggestionsArray.length === 0) {
-    		return false;
-    	} else {
+    	if ($scope.currentSuggestion) {
     		return true;
+    	} else {
+    		return false;
     	}
     };
 
@@ -76,18 +76,25 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 		let faveMatch = false;
 		$scope.reviewsOpen = false;
 		$scope.detailsOpen = false;
+		$scope.radiusOpen = false;
+		console.log("radius", $scope.radius);
 		if (suggestionsArray.length === 0) {
-			$window.alert("Picky picky! You have rejected all results. Please try again.");
+			$window.alert("Picky picky! You have rejected all results. Please try again, or widen your radius.");
 			$window.location.href = "!#/";
 		} else if (checkForFaves()) {
 			faveMatch = checkForFaves();
 			$scope.currentSuggestion = faveMatch;
+			$scope.currentSuggestion.price = dollarSigns();
+			starSymbols();
+
 			//if a suggestion in the array matches something in the save for later array, push it to the current suggestion
 		} else {
 		checkSuggestions();
 		let rando = generateRandom(suggestionsArray);
 		$scope.currentSuggestion = suggestionsArray.slice(rando, rando+1)[0];
 		suggestionsArray.splice(rando, 1);
+		$scope.currentSuggestion.price = dollarSigns();
+		starSymbols();
 		console.log("suggestionsArray", suggestionsArray);
 		console.log("current suggestion", $scope.currentSuggestion);
 		if ($scope.currentSuggestion.photos !== undefined) {
@@ -99,6 +106,34 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 	  }
 	};
 
+	let dollars = '';
+	function dollarSigns() {
+		dollars = '';
+		console.log("currentSuggestion", $scope.currentSuggestion);
+		for (let j=0; j<$scope.currentSuggestion.price_level; j++) {
+			dollars += `$`;
+		}
+			console.log("dollars", dollars);
+			return dollars;
+	}
+
+
+	let oneStar = `<i class='fa fa-star...></i>`;
+	let stars = '';
+	function starSymbols() {
+		let starsNum = Math.round($scope.currentSuggestion.rating);
+		console.log("starsNum", starsNum);
+		stars = '';
+		stars = oneStar.repeat(starsNum);
+		console.log("stars", stars);
+		$scope.thisCanBeusedInsideNgBindHtml = $sce.trustAsHtml(stars);
+		//return stars;
+	}
+
+	$scope.changeRadius = (miles) => {
+		$scope.radius = (miles * 1609);
+	};
+		
 	$scope.moreInfo = () => {
 		SuggestionsFactory.getPlaceDetails($scope.currentSuggestion.place_id)
 		.then( (details) => {
@@ -208,3 +243,5 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 		};	
 	
 });
+
+

@@ -21,4 +21,8 @@ eatsApp.controller('NavController', function ($scope, $window, $routeParams, Use
   };  
 
 
+  $scope.changeRadius = () => {
+    $window.location.href = "#!/user/suggest/#userRadius";
+  };  
+
 });

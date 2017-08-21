@@ -2,7 +2,11 @@
 @import '../lib/node_modules/tether/dist/css/tether.min.css';
 @fa-font-path:   "../font";
 
-$font-stack: 'Just Another Hand', cursive;
+$font-stack1: 'Just Another Hand', cursive;
+$font-stack2: 'Handlee', cursive;
+$font-stack3: 'Caveat Brush', cursive;
+$font-stack4: 'Archivo', sans-serif;
+
 
 $primary-color: #f08f18;
 $secondary-color: #06717d;
@@ -10,6 +14,20 @@ $tertiary-color: #e2820f;
 $fourth-color: #509998;
 $whiteish: #f0e6e1;
 
+.more-margin{
+	margin-top: 4px;
+}
+.caveat-font {
+	font-family: $font-stack3;
+}
+
+.archivo-font {
+	font-family: $font-stack4;
+}
+
+.another-font {
+	font-family: $font-stack1;
+}
 
 .restaurant-photo {
 	max-height: 500px;
@@ -122,4 +140,6 @@ ul {
 	background-color: #ffe;
 }
 
-
+.bold {
+	font-weight: 700;
+}
