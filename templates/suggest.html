@@ -1,8 +1,81 @@
-<div ng-include="getInclude()"></div>
+	<div ng-include="getInclude()"></div>
+	<div ng-init="initSuggestionsArray(radius)"></div>
+ <div class="m-app-loading" ng-animate-children>
 
-<div ng-init="initSuggestionsArray(radius)"></div>
+        <!--
+            HACKY CODE WARNING: I'm putting Style block inside directive so that it
+            will be removed from the DOM when we remove the directive container.
+        -->
+        <style type="text/css">
+            div.m-app-loading {
+                position: fixed ;
+            }
+            div.m-app-loading div.animated-container {
+                background-color: #f0e6e1;
+                bottom: 0px ;
+                left: 0px ;
+                opacity: 1.0 ;
+                position: fixed ;
+                right: 0px ;
+                top: 0px ;
+                z-index: 999999 ;
+            }
+            /* Used to initialize the ng-leave animation state. */
+            div.m-app-loading div.animated-container.ng-leave {
+                opacity: 1.0 ;
+                transition: all linear 200ms ;
+                    -webkit-transition: all linear 200ms ;
+            }
+            /* Used to set the end properties of the ng-leave animation state. */
+            div.m-app-loading div.animated-container.ng-leave-active {
+                opacity: 0 ;
+            }
+            div.m-app-loading div.messaging {
+                color: #06717d ;
+                font-family: monospace ;
+                left: 0px ;
+                margin-top: -37px ;
+                position: absolute ;
+                right: 0px ;
+                text-align: center ;
+                top: 50% ;
+            }
+            div.m-app-loading h1 {
+                font-size: 26px ;
+                line-height: 35px ;
+                margin: 0px 0px 20px 0px ;
+            }
+            div.m-app-loading p {
+                font-size: 18px ;
+                line-height: 14px ;
+                margin: 0px 0px 0px 0px ;
+            }
+        </style>
 
-<div class="container">
+
+        <!-- BEGIN: Actual animated container. -->
+        <div class="animated-container" ng-hide="defReady()">
+
+            <div class="messaging">
+
+                <h1>
+                    Finding your location...
+                </h1>
+
+                <p>
+                    Please stand by while we check on what eateries are open near you!
+                </p>
+
+            </div>
+
+        </div>
+        <!-- END: Actual animated container. -->
+
+    </div>
+    <!-- END: App-Loading Screen. -->
+
+
+	<div class="container" ng-show="defReady()">
 		
 		<div data-place-id={{currentSuggestion.id}} class="container justify-content-center align-items-center">
 			<h1 class="">{{currentSuggestion.name}}</h1>
