@@ -1,6 +1,6 @@
 'use strict';
 
-eatsApp.controller('SuggestionsUserController', function ($scope, $window, $routeParams, UserFactory, SuggestionsFactory, GoogleCreds) {
+eatsApp.controller('SuggestionsUserController', function ($scope, $sce, $window, $routeParams, UserFactory, SuggestionsFactory, GoogleCreds) {
 
     let suggestionsArray = [];
     let favesArray = [];
@@ -83,6 +83,8 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 			faveMatch = checkForFaves();
 			$scope.currentSuggestion = faveMatch;
 			$scope.currentSuggestion.price = dollarSigns();
+			//$scope.thisCanBeusedInsideNgBindHtml = $sce.trustAsHtml($scope.currentSuggestion.stars);
+			starSymbols();
 
 			//if a suggestion in the array matches something in the save for later array, push it to the current suggestion
 		} else {
@@ -91,6 +93,7 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 		$scope.currentSuggestion = suggestionsArray.slice(rando, rando+1)[0];
 		suggestionsArray.splice(rando, 1);
 		$scope.currentSuggestion.price = dollarSigns();
+		starSymbols();
 		console.log("suggestionsArray", suggestionsArray);
 		console.log("current suggestion", $scope.currentSuggestion);
 		if ($scope.currentSuggestion.photos !== undefined) {
@@ -107,12 +110,26 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $window, $rout
 		dollars = '';
 		console.log("currentSuggestion", $scope.currentSuggestion);
 		for (let j=0; j<$scope.currentSuggestion.price_level; j++) {
-			dollars += '$';
+			dollars += `$`;
 		}
 			console.log("dollars", dollars);
 			return dollars;
 	}
 
+
+	let oneStar = `<i class='fa fa-star...></i>`;
+	let stars = '';
+	function starSymbols() {
+		let starsNum = Math.round($scope.currentSuggestion.rating);
+		console.log("starsNum", starsNum);
+		stars = '';
+		stars = oneStar.repeat(starsNum);
+		console.log("stars", stars);
+		$scope.thisCanBeusedInsideNgBindHtml = $sce.trustAsHtml(stars);
+		//return stars;
+	}
+
+	
 	$scope.moreInfo = () => {
 		SuggestionsFactory.getPlaceDetails($scope.currentSuggestion.place_id)
 		.then( (details) => {
