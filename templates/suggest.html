@@ -90,9 +90,9 @@
 				</div>
 
 				<div class="col-6">
-					<p>Avg. Rating: {{currentSuggestion.rating}}</p>
-					<p>Avg. Rating:</p><div ng-bind-html="thisCanBeusedInsideNgBindHtml"></div>
-				</div>
+					<p>Avg Rating: {{currentSuggestion.rating}}</p>
+<!-- 					<p>Avg. Rating:</p><div ng-bind-html="thisCanBeusedInsideNgBindHtml"></div>
+ -->				</div>
 				
 			</div>
 			<div class="row more-btn">
@@ -113,7 +113,7 @@
         <div ng-show="reviewsOpen && detailsOpen" class="container yetmoreInfoDisplay">
     	    <h3>User Reviews</h3>
     	    <div class="separate" ng-repeat="review in reviews">
-    	    	<p><img class="review-pic" src="{{review.profile_photo_url}}">  {{review.rating}} stars. {{review.text}}</p>
+    	    	<p><img class="review-pic" src="{{review.profile_photo_url}}">  Star rating: {{review.rating}}. {{review.text}}</p>
     	    	<p>-<a href="author_url">{{review.author_name}}</a>, {{review.relative_time_description}}</p>
     	    </div>
         </div>
@@ -123,6 +123,11 @@
 			<button ng-show="ifUser()" type="button" class="btn btn-danger btn-lg btn-block" ng-click="blacklistSuggestion(currentSuggestion.id, currentSuggestion.vicinity, currentSuggestion.name)">Never.</button>
 			<button ng-click="finishSession(currentSuggestion.place_id)" type="button" class="btn btn-success btn-lg btn-block">Yes!</button>
 			<button ng-show="ifUser()" ng-click="saveForLater(currentSuggestion.place_id, currentSuggestion.vicinity, currentSuggestion.name); rejectSuggestion()" type="button" class="btn btn-info btn-lg btn-block">Maybe next time.</button>
+            <button type="button" ng-click="radiusOpen = !radiusOpen" class="btn btn-secondary btn-sm full-width more-margin"><i class="fa fa-angle-double-down" aria-hidden="true"></i>   Change Radius   <i class="fa fa-angle-double-down" aria-hidden="true"></i></button>
 	    </div>
+    <div ng-show="radiusOpen">
+        <label for="userRadius">Enter your desired radius (in miles):</label>
+        <input type="number" id="userRadius" name="radius" ng-model="milesRadius">
+        <button class="btn btn-primary btn-sm" ng-click="changeRadius(milesRadius); initSuggestionsArray(radius)">Submit and search again</button>
 	</div>
 </div>

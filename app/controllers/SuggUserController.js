@@ -16,10 +16,10 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $sce, $window,
     };
 
     $scope.defReady = () => {
-    	if (suggestionsArray.length === 0) {
-    		return false;
-    	} else {
+    	if ($scope.currentSuggestion) {
     		return true;
+    	} else {
+    		return false;
     	}
     };
 
@@ -76,14 +76,15 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $sce, $window,
 		let faveMatch = false;
 		$scope.reviewsOpen = false;
 		$scope.detailsOpen = false;
+		$scope.radiusOpen = false;
+		console.log("radius", $scope.radius);
 		if (suggestionsArray.length === 0) {
-			$window.alert("Picky picky! You have rejected all results. Please try again.");
+			$window.alert("Picky picky! You have rejected all results. Please try again, or widen your radius.");
 			$window.location.href = "!#/";
 		} else if (checkForFaves()) {
 			faveMatch = checkForFaves();
 			$scope.currentSuggestion = faveMatch;
 			$scope.currentSuggestion.price = dollarSigns();
-			//$scope.thisCanBeusedInsideNgBindHtml = $sce.trustAsHtml($scope.currentSuggestion.stars);
 			starSymbols();
 
 			//if a suggestion in the array matches something in the save for later array, push it to the current suggestion
@@ -129,7 +130,10 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $sce, $window,
 		//return stars;
 	}
 
-	
+	$scope.changeRadius = (miles) => {
+		$scope.radius = (miles * 1609);
+	};
+		
 	$scope.moreInfo = () => {
 		SuggestionsFactory.getPlaceDetails($scope.currentSuggestion.place_id)
 		.then( (details) => {
@@ -239,3 +243,5 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $sce, $window,
 		};	
 	
 });
+
+
