@@ -24,10 +24,10 @@ Once you have pulled down the repo, running `npm install` will get you:
 
 ## Built With
 
-* [AngularJS]() - The framework used
-* [Google Places API]() - Data source
-* [Bootstrap 4]() - For layout and styling
-* [Firebase] () - For data storage
+* [AngularJS](https://angularjs.org/) - The framework used
+* [Google Places API](https://developers.google.com/places/) - Data source
+* [Bootstrap 4](https://v4-alpha.getbootstrap.com/) - For layout and styling
+* [Firebase] (https://firebase.google.com/) - For data storage
 
 ## Authors
 
