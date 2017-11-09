@@ -11,7 +11,30 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-To run this code on your own machine, you will need to create a Firebase account and save your own authentication specs. Mine are not pushed up.
+To run this code on your own machine, you will need to create a Firebase account and save your own authentication specs. Mine are not pushed up. Go to `https://console.firebase.google.com` and create a project, then click 'Add firebase to your web app'  
+
+You should also get an API key from Google Dashboard to use with the API, as my API keys are not pushed up. 
+- Go to `https://console.cloud.google.com/home/dashboard` and create a project there, where you can generate API keys
+
+ - to plug directly in to the existing code, you can create the file `/app/values/googleCreds.js`
+and insert the following code:
+```
+eatsApp.constant("GoogleCreds", {
+    PlacesApiKey: "YOUR-GOOGGLE-API-KEY-FOR-PLACES",
+    DirectionsApiKey: "YOUR-GOOGLE-API-KEY-FOR-DIRECTIONS"
+});
+```
+- then do the same with `/app/values/FBCreds.js`
+and insert
+```
+eatsApp.constant("FBCreds", {
+    apiKey: "YOUR-FB-API-KEY",
+    authDomain: "YOUR-AUTHDOMAIN"
+});
+```
+  
+
+### Installing
 
 Once you have pulled down the repo, running `npm install` will get you:
  - Grunt
