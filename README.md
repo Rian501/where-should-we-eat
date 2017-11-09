@@ -37,13 +37,13 @@ eatsApp.constant("FBCreds", {
 ### Installing
 
 Once you have pulled down the repo, running `npm install` will get you:
- - Grunt
- - JShint
- - Angular and Angular-Route
- - Bootstrap 4 (with font-awesome)
- - jQuery
- - Lodash
- - Firebase
+ - Grunt (compiles the sass into css)
+ - JShint (will keep your js on point)
+ - Angular and Angular-Route (will allow the ng-stuff to run)
+ - Bootstrap 4 (and font-awesome, will support the design)
+ - jQuery (drives some of the functionality)
+ - Lodash (some key js methods)
+ - Firebase (helps with authentication)
 
 ## Built With
 
