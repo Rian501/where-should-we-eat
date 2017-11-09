@@ -31,7 +31,7 @@ Once you have pulled down the repo, running `npm install` will get you:
 
 ## Authors
 
-* **Emily Lemmon** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+* Emily Lemmon
 
 ## License
 
