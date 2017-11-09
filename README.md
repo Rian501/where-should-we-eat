@@ -11,6 +11,8 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
+I use http-server (https://www.npmjs.com/package/http-server) to run front-end code.  I suggest a global install if you haven't already. Otherwise, you can server it as you prefer.
+
 To run this code on your own machine, you will need to create a Firebase account and save your own authentication specs. Mine are not pushed up. Go to `https://console.firebase.google.com` and create a project, then click 'Add firebase to your web app'  
 
 You should also get an API key from Google Dashboard to use with the API, as my API keys are not pushed up. 
@@ -44,6 +46,16 @@ Once you have pulled down the repo, running `npm install` will get you:
  - jQuery (drives some of the functionality)
  - Lodash (some key js methods)
  - Firebase (helps with authentication)
+ 
+ ## Run the tests
+ Once you have a copy of the project environment, run http-server in your terminal and navigate to localhost:8080.
+  - Try the app as a 'guest' user
+  - Try the app as a logged in user. 
+  - Try saving a place "for later"
+  - Try rejecting a place for "never"
+  - Look at your blacklist and saved lists
+  - Try changing your search radius (note that the search radius is an actual circle, and does not account for the winding of roads)
+  
 
 ## Built With
 
