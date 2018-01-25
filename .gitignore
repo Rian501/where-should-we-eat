@@ -2,6 +2,7 @@
 /app/values/FBCreds.js
 lib/node_modules
 lib/.sass-cache
+.sass-cache/
 eatsApp/
 css/
 node_modules/
