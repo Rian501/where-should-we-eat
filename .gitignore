@@ -4,8 +4,8 @@ lib/node_modules
 lib/.sass-cache
 eatsApp/
 css/
+node_modules/
 
 .firebaserc
 404.html
 firebase.json
-node_modules/
