@@ -1,8 +1,8 @@
-	<div ng-include="getInclude()"></div>
+	<div ng-include="'templates/userNav.html'"></div>
 	<div ng-init="initSuggestionsArray(radius)"></div>
  <div class="m-app-loading" ng-animate-children>
 
-        <!--
+        <!-- adjusted from https://codepen.io/anon/pen/KpGryb.html
             HACKY CODE WARNING: I'm putting Style block inside directive so that it
             will be removed from the DOM when we remove the directive container.
         -->

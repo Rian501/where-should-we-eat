@@ -29,11 +29,11 @@ eatsApp.factory('UserFactory', function($q, $http, $window, FirebaseUrl, FBCreds
 
 	let loginUser = () => {
 		return $q( (resolve, reject) => {
-			firebase.auth().signInWithPopup( provider)
+			firebase.auth().signInWithPopup(provider)
 			.then( (data) => {
-			currentUser = data.user.uid;
-			console.log("currentUser", currentUser);
-			resolve(data);
+				currentUser = data.user.uid;
+				console.log("currentUser", currentUser);
+				resolve(data);
 		  })
 		  .catch( (err) => {
 			console.log("error loggin in", err.message);
