@@ -28,7 +28,7 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 		});
 	};
 
-//new function for when user clicks next thingy.
+//new function for when user clicks for next suggestion.
 	let moreCounter = 0;
 	let fetchMoreSuggestions = () => {
 		console.log("fetching more suggestions, moreCounter:", moreCounter);
@@ -42,7 +42,6 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 					resolve(placesDataII);
 				});
 			});
-			
 		} else {
 			return false;
 		}
