@@ -85,7 +85,7 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $sce, $window,
 			faveMatch = checkForFaves();
 			$scope.currentSuggestion = faveMatch;
 			$scope.currentSuggestion.price = dollarSigns();
-			starSymbols();
+			// starSymbols();
 
 			//if a suggestion in the array matches something in the save for later array, push it to the current suggestion
 		} else {
@@ -94,7 +94,7 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $sce, $window,
 		$scope.currentSuggestion = suggestionsArray.slice(rando, rando+1)[0];
 		suggestionsArray.splice(rando, 1);
 		$scope.currentSuggestion.price = dollarSigns();
-		starSymbols();
+		// starSymbols();
 		console.log("suggestionsArray", suggestionsArray);
 		console.log("current suggestion", $scope.currentSuggestion);
 		if ($scope.currentSuggestion.photos !== undefined) {
@@ -118,17 +118,17 @@ eatsApp.controller('SuggestionsUserController', function ($scope, $sce, $window,
 	}
 
 
-	let oneStar = `<i class='fa fa-star...></i>`;
-	let stars = '';
-	function starSymbols() {
-		let starsNum = Math.round($scope.currentSuggestion.rating);
-		console.log("starsNum", starsNum);
-		stars = '';
-		stars = oneStar.repeat(starsNum);
-		console.log("stars", stars);
-		$scope.thisCanBeusedInsideNgBindHtml = $sce.trustAsHtml(stars);
-		//return stars;
-	}
+	// let oneStar = `<i class='fa fa-star...></i>`;
+	// let stars = '';
+	// function starSymbols() {
+	// 	let starsNum = Math.round($scope.currentSuggestion.rating);
+	// 	console.log("starsNum", starsNum);
+	// 	stars = '';
+	// 	stars = oneStar.repeat(starsNum);
+	// 	console.log("stars", stars);
+	// 	$scope.thisCanBeusedInsideNgBindHtml = $sce.trustAsHtml(stars);
+	// 	//return stars;
+	// }
 
 	$scope.changeRadius = (miles) => {
 		$scope.radius = (miles * 1609);

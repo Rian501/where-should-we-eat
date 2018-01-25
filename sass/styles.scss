@@ -1,6 +1,6 @@
-@import '../lib/node_modules/bootstrap/scss/bootstrap.scss';
-@import '../lib/node_modules/tether/dist/css/tether.min.css';
-@fa-font-path:   "../font";
+@import '../node_modules/bootstrap/scss/bootstrap.scss';
+@import '../node_modules/tether/dist/css/tether.min.css';
+@fa-font-path:   "../font"; 
 
 $font-stack1: 'Just Another Hand', cursive;
 $font-stack2: 'Handlee', cursive;
