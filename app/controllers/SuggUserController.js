@@ -12,19 +12,14 @@ eatsApp.controller("SuggestionsUserController", function(
   let suggestionsArray = [];
   let favesArray = [];
   let userLoc = {};
-  // $scope.radius = 7500;
+  $scope.radius = 7500;
 
-	//if the user has a different set radius? --just set all to 5mi unless changed
-	//IF there even is a user!
-	// $scope.radius = UserFactory.getUserRadius()
 	let setRadius = () => {
 	  if (UserFactory.getUser()) {
       UserFactory.getUserRadius()
       .then((userRadiusData) =>{
         console.log("userRadiusData obj vals[0] userradius", Object.values(userRadiusData)[0].userRadius);
-        // $scope.radius = Object.values(userRadiusData)[0].userRadius;
         $scope.radius = Object.values(userRadiusData)[0].userRadius * 1609;
-
       });
 		}
   };
