@@ -45,5 +45,9 @@ eatsApp.config(($routeProvider)=>{
         templateUrl: 'templates/finished.html',
         controller: 'FinishedController',
     })
+    .when('/radius', {
+        templateUrl: 'templates/radius.html',
+        controller: 'RadiusController'
+    })
     .otherwise('/');
 });
