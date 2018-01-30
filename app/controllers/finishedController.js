@@ -14,7 +14,6 @@ eatsApp.controller('FinishedController', function ($scope, $window, $routeParams
 
 		SuggestionsFactory.getPlaceDetails($routeParams.place_id)
 			.then( (details) => {
-				console.log("details?", details);
 				$scope.details = details;
 			});
 	};

@@ -95,7 +95,6 @@ eatsApp.factory("UserFactory", function(
       $http
         .get(`${FirebaseUrl}radius.json?orderBy="uid"&equalTo="${currentUser}"`)
         .then(data => {
-          console.log("daaaata from get user radius", data);
           resolve(data.data);
         });
     });
@@ -129,7 +128,6 @@ eatsApp.factory("UserFactory", function(
   };
 
   let saveUserRadius = userRad => {
-    console.log("userRadObj passed to userfactory", userRad);
     //save object to FB with uid and radius (in miles??) ---
     //also, how to differentiate between updating and adding for first time
     if (currentUser) {
@@ -138,23 +136,13 @@ eatsApp.factory("UserFactory", function(
         userRadius: userRad
       };
       getUserRadius().then(data => {
-        console.log(
-          "data that comes back when I am testing to see if the radius is a post or a put",
-          data
-        );
-        console.log(
-          "Object.keys(data) that comes back when I am testing to see if the radius is a post or a put",
-          Object.keys(data)
-        );
         let currentUserRadiusFBkey = Object.keys(data)[0];
         if (Object.keys(data)[0]) {
           updateUserRad(currentUserRadiusFBkey, userRadObj).then(response => {
-            console.log(response);
           });
         } else {
           postNewUserRad(userRadObj)
             .then(data => {
-              console.log("posted data", data);
             })
             .catch(err => {
               console.log("error", err);

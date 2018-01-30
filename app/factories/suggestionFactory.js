@@ -14,7 +14,6 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 	let nextPageToken = null;
 
 	let fetchAPISuggestions = (userLat, userLon, radiusM) => {
-		console.log("radius", radiusM);
 		return $q( (resolve, reject) => {
 			//opennow parameter auto filters results for currently open stuff
 			//type restaurant can be changed...
@@ -36,7 +35,6 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 			return $q( (resolve, reject) => {
 				$http.get(`https://emlemproxy.herokuapp.com/api/places/nearbysearch/json?pagetoken=${nextPageToken}&key=${placesAPI2}`)
 				.then( (placesDataII) => {
-					console.log("places II??", placesDataII);
 					nextPageToken = placesDataII.data.next_page_token;
 					moreCounter += 1;
 					resolve(placesDataII);
@@ -148,7 +146,6 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 			$http.get(`${FirebaseUrl}trylater.json?orderBy="uid"&equalTo="${uid}"`)
 			.then( (data) => {
 				let tryLaterArr = [];
-				console.log("data from try later?", data);
 				Object.keys(data.data).forEach( (key) => {
 					data.data[key].FBid = key;
 					tryLaterArr.push(data.data[key]);

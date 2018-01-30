@@ -14,18 +14,17 @@ eatsApp.controller("SuggestionsUserController", function(
   let userLoc = {};
   $scope.radius = 7500;
 
-	let setRadius = () => {
-	  if (UserFactory.getUser()) {
-      UserFactory.getUserRadius()
-      .then((userRadiusData) =>{
-        console.log("userRadiusData obj vals[0] userradius", Object.values(userRadiusData)[0].userRadius);
+  let setRadius = () => {
+    if (UserFactory.getUser()) {
+      UserFactory.getUserRadius().then(userRadiusData => {
         $scope.radius = Object.values(userRadiusData)[0].userRadius * 1609;
       });
-		}
+    }
   };
-  
+//set the radius to the saved user preference if there is one
   setRadius();
 
+  //to allow the template to test for user
   $scope.ifUser = () => {
     if (UserFactory.getUser()) {
       return true;
@@ -52,6 +51,7 @@ eatsApp.controller("SuggestionsUserController", function(
 
   $scope.initSuggestionsArray = radius => {
     buildBlacklist();
+    buildFaveslist();
     UserFactory.locateUser().then(data => {
       console.log("userLoc?", data);
       userLoc.lat = data.lat;
@@ -65,9 +65,6 @@ eatsApp.controller("SuggestionsUserController", function(
         .then(results => {
           suggestionsArray = results;
           checkSuggestions();
-          return suggestionsArray;
-        })
-        .then(suggestions => {
           $scope.showNewSuggestion();
         });
     });
@@ -79,7 +76,7 @@ eatsApp.controller("SuggestionsUserController", function(
       SuggestionsFactory.fetchMoreSuggestions().then(data => {
         //concat the next page of results
         suggestionsArray = suggestionsArray.concat(data.data.results);
-        suggestionsArray = _.uniq(suggestionsArray, "id");
+        suggestionsArray = _.uniqWith(suggestionsArray, _.isEqual);
         checkSuggestions();
       });
     }
@@ -98,7 +95,6 @@ eatsApp.controller("SuggestionsUserController", function(
     $scope.reviewsOpen = false;
     $scope.detailsOpen = false;
     $scope.radiusOpen = false;
-    console.log("radius", $scope.radius);
     if (suggestionsArray.length === 0) {
       $window.alert(
         "Picky picky! You have rejected all results. Please try again, or widen your radius."
@@ -117,9 +113,8 @@ eatsApp.controller("SuggestionsUserController", function(
       $scope.currentSuggestion = suggestionsArray.slice(rando, rando + 1)[0];
       suggestionsArray.splice(rando, 1);
       $scope.currentSuggestion.price = dollarSigns();
-      // starSymbols();
       console.log("suggestionsArray", suggestionsArray);
-      console.log("current suggestion", $scope.currentSuggestion);
+      // console.log("current suggestion", $scope.currentSuggestion);
       if ($scope.currentSuggestion.photos !== undefined) {
         let photoref = $scope.currentSuggestion.photos[0].photo_reference;
         $scope.currentSuggestion.photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=500&photoreference=${photoref}&key=${
@@ -134,29 +129,11 @@ eatsApp.controller("SuggestionsUserController", function(
   let dollars = "";
   function dollarSigns() {
     dollars = "";
-    console.log("currentSuggestion", $scope.currentSuggestion);
     for (let j = 0; j < $scope.currentSuggestion.price_level; j++) {
       dollars += `$`;
     }
-    console.log("dollars", dollars);
     return dollars;
   }
-
-  // let oneStar = `<i class='fa fa-star...></i>`;
-  // let stars = '';
-  // function starSymbols() {
-  // 	let starsNum = Math.round($scope.currentSuggestion.rating);
-  // 	console.log("starsNum", starsNum);
-  // 	stars = '';
-  // 	stars = oneStar.repeat(starsNum);
-  // 	console.log("stars", stars);
-  // 	$scope.thisCanBeusedInsideNgBindHtml = $sce.trustAsHtml(stars);
-  // 	//return stars;
-  // }
-
-  // $scope.changeRadius = miles => {
-  //   $scope.radius = miles * 1609;
-  // };
 
   $scope.moreInfo = () => {
     SuggestionsFactory.getPlaceDetails($scope.currentSuggestion.place_id).then(
@@ -171,7 +148,6 @@ eatsApp.controller("SuggestionsUserController", function(
       userLoc.lng,
       $scope.currentSuggestion.place_id
     ).then(distData => {
-      console.log("distData!!", distData);
       $scope.distance = distData.distance;
       $scope.duration = distData.duration;
     });
@@ -190,12 +166,12 @@ eatsApp.controller("SuggestionsUserController", function(
   function buildFaveslist() {
     let currentUser = UserFactory.getUser();
     SuggestionsFactory.getSavedlist(currentUser).then(listData => {
-      console.log("faves?", listData);
       favesArray = favesArray.concat(listData);
     });
   }
 
   function checkForFaves() {
+    // buildFaveslist()
     favesArray.forEach(function(item) {
       for (let i = 0; i < suggestionsArray.length; i++) {
         if (item.place_id == suggestionsArray[i].id) {
@@ -211,8 +187,8 @@ eatsApp.controller("SuggestionsUserController", function(
   function buildBlacklist() {
     let currentUser = UserFactory.getUser();
     SuggestionsFactory.getBlacklist(currentUser).then(listData => {
-      console.log("blacklist", listData);
       rejectsArray = rejectsArray.concat(listData);
+      _.uniqWith(rejectsArray, _.isEqual);
     });
   }
 
@@ -240,7 +216,7 @@ eatsApp.controller("SuggestionsUserController", function(
     rejectsArray.forEach(function(item) {
       for (let i = 0; i < suggestionsArray.length; i++) {
         if (item.place_id == suggestionsArray[i].id) {
-          console.log("what was cut?", suggestionsArray[i]);
+          // console.log("what was cut?", suggestionsArray[i]);
           suggestionsArray.splice(i, i + 1);
         }
       }
