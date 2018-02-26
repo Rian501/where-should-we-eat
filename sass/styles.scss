@@ -1,6 +1,6 @@
-@import '../node_modules/bootstrap/scss/bootstrap.scss';
-@import '../node_modules/tether/dist/css/tether.min.css';
-@fa-font-path:   "../font"; 
+// @import '../node_modules/bootstrap/scss/bootstrap.scss';
+// @import '../node_modules/tether/dist/css/tether.min.css';
+// @fa-font-path:   "../font"; 
 
 $font-stack1: 'Just Another Hand', cursive;
 $font-stack2: 'Handlee', cursive;
@@ -13,6 +13,10 @@ $secondary-color: #06717d;
 $tertiary-color: #e2820f;
 $fourth-color: #509998;
 $whiteish: #f0e6e1;
+
+.fakelink {
+	cursor: pointer;
+}
 
 .more-margin{
 	margin-top: 4px;
@@ -30,12 +34,12 @@ $whiteish: #f0e6e1;
 }
 
 .restaurant-photo {
-	max-height: 500px;
+	max-height: 200px;
 	max-width: 100%;
 }
 
 .review-pic {
-	height: 30px;
+	max-height: 30px;
 	display: inline;
 }
 .more-btn {
