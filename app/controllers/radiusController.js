@@ -1,6 +1,6 @@
 'use strict';
 
-eatsApp.controller('RadiusController', function ($scope, $window, $routeParams, UserFactory) {
+eatsApp.controller('RadiusController', function ($scope, $window, $routeParams, RadiusFactory, UserFactory) {
 
   $scope.currentUser = UserFactory.getUser();
   //function to get user radius
@@ -18,5 +18,11 @@ eatsApp.controller('RadiusController', function ($scope, $window, $routeParams, 
     $scope.radius = miles * 1609;
   };
   // funtion to take input and re-set radius and run the suggestion again
+  $scope.reSearchRadius = (tempRad) => {
+    $scope.radius = tempRad * 1609
+  };
+
+  $scope.radius = RadiusFactory;
+
 });
 	
