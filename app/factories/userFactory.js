@@ -108,7 +108,7 @@ eatsApp.factory("UserFactory", function(
           angular.toJson(userRadObj)
         )
         .then(response => {
-          console.log("radius PUTed to fb");
+          console.log("radius PUTed to fb", response);
           resolve(response);
         })
         .catch(err => reject(err));
@@ -127,36 +127,37 @@ eatsApp.factory("UserFactory", function(
     });
   };
 
-  let saveUserRadius = userRad => {
-    //save object to FB with uid and radius (in miles??) ---
-    //also, how to differentiate between updating and adding for first time
-    if (currentUser) {
-      let userRadObj = {
-        uid: currentUser,
-        userRadius: userRad
-      };
-      getUserRadius().then(data => {
-        let currentUserRadiusFBkey = Object.keys(data)[0];
-        if (Object.keys(data)[0]) {
-          updateUserRad(currentUserRadiusFBkey, userRadObj).then(response => {
-          });
-        } else {
-          postNewUserRad(userRadObj)
-            .then(data => {
-            })
-            .catch(err => {
-              console.log("error", err);
-            });
-        }
-      });
-    } else {
-      alert("You must be signed in!");
-    }
-  };
+  // let saveUserRadius = userRad => {
+  //   //save object to FB with uid and radius (in miles??) ---
+  //   //also, how to differentiate between updating and adding for first time
+  //   if (currentUser) {
+  //     let userRadObj = {
+  //       uid: currentUser,
+  //       userRadius: userRad
+  //     };
+  //     getUserRadius().then(data => {
+  //       let currentUserRadiusFBkey = Object.keys(data)[0];
+  //       if (Object.keys(data)[0]) {
+  //         updateUserRad(currentUserRadiusFBkey, userRadObj).then(response => {
+  //         });
+  //       } else {
+  //         postNewUserRad(userRadObj)
+  //           .then(data => {
+  //           })
+  //           .catch(err => {
+  //             console.log("error", err);
+  //           });
+  //       }
+  //     });
+  //   } else {
+  //     alert("You must be signed in!");
+  //   }
+  // };
 
   return {
-    saveUserRadius,
     getUserRadius,
+    postNewUserRad,
+    updateUserRad,
     loginUser,
     isAuthenticated,
     getUser,

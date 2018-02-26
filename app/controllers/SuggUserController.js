@@ -17,16 +17,18 @@ eatsApp.controller("SuggestionsUserController", function(
   $scope.radius = RadiusFactory;
 
   let setRadius = () => {
-    if (UserFactory.getUser()) {
+    if ($routeParams.radius) {
+      $scope.radius = $routeParams.radius;
+    } else if (UserFactory.getUser()) {
       UserFactory.getUserRadius().then(userRadiusData => {
         $scope.radius = Object.values(userRadiusData)[0].userRadius * 1609;
       });
     }
   };
-//set the radius to the saved user preference if there is one
+//set the radius to the saved user preference if there is one, or to the one temporarily set by the user in the radius screen
   setRadius();
 
-  //to allow the template to test for user
+//to allow the template to test for user
   $scope.ifUser = () => {
     if (UserFactory.getUser()) {
       return true;
@@ -35,7 +37,7 @@ eatsApp.controller("SuggestionsUserController", function(
     }
   };
 
-  //allow for conditional on the template, to see if the first suggestion is ready to show
+//allow for conditional on the template, to see if the first suggestion is ready to show
   $scope.defReady = () => {
     if ($scope.currentSuggestion) {
       return true;
@@ -59,17 +61,13 @@ eatsApp.controller("SuggestionsUserController", function(
       console.log("radius?", $scope.radius);
       userLoc.lat = data.lat;
       userLoc.lng = data.lng;
-      radius = $scope.radius; //instead, we'll have to get the radius through a provider, maybe even radius factory
-      return SuggestionsFactory.fetchAPISuggestions(
-        userLoc.lat,
-        userLoc.lng,
-        radius
-      )
-        .then(results => {
+      return SuggestionsFactory.fetchAPISuggestions(userLoc.lat, userLoc.lng, $scope.radius).then(
+        results => {
           suggestionsArray = results;
           checkSuggestions();
           $scope.showNewSuggestion();
-        });
+        }
+      );
     });
   };
 
@@ -99,9 +97,9 @@ eatsApp.controller("SuggestionsUserController", function(
     $scope.detailsOpen = false;
     $scope.radiusOpen = false;
     if (suggestionsArray.length === 0) {
-      $window.alert(
-        "Picky picky! You have rejected all results. Please try again, or widen your radius."
-      );
+      // $window.alert(
+      //   "Picky picky! You have rejected all results. Please try again, or widen your radius."
+      // );
       $window.location.href = "/#!/radius";
     } else if (checkForFaves()) {
       faveMatch = checkForFaves();
@@ -129,11 +127,11 @@ eatsApp.controller("SuggestionsUserController", function(
     }
   };
 
-  let dollars = "";
+  let dollars;
   function dollarSigns() {
     dollars = "";
     for (let j = 0; j < $scope.currentSuggestion.price_level; j++) {
-      dollars += `$`;
+      dollars += '$';
     }
     return dollars;
   }
