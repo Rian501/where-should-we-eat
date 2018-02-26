@@ -8,7 +8,7 @@ module.exports = function(grunt) {
         globalstrict: true,
         globals: {"angular": true, "eatsApp": true} //need to add app module's name
       },
-      files: ['../app/**/*.js']
+      files: ['./app/**/*.js']
     },
     sass: {
       dist: {
@@ -19,11 +19,11 @@ module.exports = function(grunt) {
     },
     watch: {
       javascripts: {
-        files: ['../app/**/*.js'],
+        files: ['./app/**/*.js'],
         tasks: ['jshint']
       },
       sass: {
-        files: ['../sass/**/*.scss'],
+        files: ['./sass/**/*.scss'],
         tasks: ['sass']
       }
     }

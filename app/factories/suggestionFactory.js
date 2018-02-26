@@ -12,39 +12,45 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 	let placesAPI2 = config.placesAPI2;
 	let directionsAPI = config.directionsAPI;
 	let nextPageToken = null;
+	let keyword = 'food';
+	let type = 'restaurant';
 
 	let fetchAPISuggestions = (userLat, userLon, radiusM) => {
-		console.log("radius", radiusM);
 		return $q( (resolve, reject) => {
 			//opennow parameter auto filters results for currently open stuff
 			//type restaurant can be changed...
 			//keyword can also be adjusted for filtering..?
-			$http.get(`https://emlemproxy.herokuapp.com/api/places/nearbysearch/json?location=${userLat},${userLon}&radius=${radiusM}&opennow=true&type=restaurant&keyword=food&key=${placesAPI2}`)
-			.then( (placesData) => {
-				//the nextpagetoken is part of the object for the first page of results
-				nextPageToken = placesData.data.next_page_token;
-				resolve(placesData.data.results);
-			});
+			$http
+        .get(
+          `https://emlemproxy.herokuapp.com/api/places/nearbysearch/json?location=${userLat},${userLon}&radius=${radiusM}&opennow=true&type=${type}&keyword=${keyword}&keyword=food&key=${placesAPI2}`
+        )
+        .then(placesData => {
+          //the nextpagetoken is part of the object for the first page of results
+          nextPageToken = placesData.data.next_page_token;
+          resolve(placesData.data.results);
+        });
 		});
 	};
 
 //new function for when user clicks for next suggestion.
 	let moreCounter = 0;
 	let fetchMoreSuggestions = () => {
-		console.log("fetching more suggestions, moreCounter:", moreCounter);
-		if (moreCounter < 6) {
-			return $q( (resolve, reject) => {
-				$http.get(`https://emlemproxy.herokuapp.com/api/places/nearbysearch/json?pagetoken=${nextPageToken}&key=${placesAPI2}`)
-				.then( (placesDataII) => {
-					console.log("places II??", placesDataII);
-					nextPageToken = placesDataII.data.next_page_token;
-					moreCounter += 1;
-					resolve(placesDataII);
-				});
+		return $q( (resolve, reject) => {
+			console.log("fetching more suggestions, moreCounter:", moreCounter);
+			console.log("current nextpagetoken", nextPageToken);
+			if (moreCounter < 6) {
+			$http.get(`https://emlemproxy.herokuapp.com/api/places/nearbysearch/json?pagetoken=${nextPageToken}&key=${placesAPI2}`)
+			.then( (placesDataII) => {
+				console.log("(trying to figure out what is going on with fetch more.. placesIIData", placesDataII.data);
+				nextPageToken = placesDataII.data.next_page_token;
+				moreCounter += 1;
+					resolve(placesDataII.data);
+				})
+				.catch( (error) => console.log(error));
+			} else {
+				return false;
+			}
 			});
-		} else {
-			return false;
-		}
 	};
 
 	let getDirections = (userLat, userLon, destID) => {
@@ -148,7 +154,6 @@ eatsApp.factory("SuggestionsFactory", function($q, $http, GoogleCreds, FirebaseU
 			$http.get(`${FirebaseUrl}trylater.json?orderBy="uid"&equalTo="${uid}"`)
 			.then( (data) => {
 				let tryLaterArr = [];
-				console.log("data from try later?", data);
 				Object.keys(data.data).forEach( (key) => {
 					data.data[key].FBid = key;
 					tryLaterArr.push(data.data[key]);

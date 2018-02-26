@@ -1,89 +1,168 @@
-'use strict';
+"use strict";
 
-eatsApp.factory('UserFactory', function($q, $http, $window, FirebaseUrl, FBCreds) {
+eatsApp.factory("UserFactory", function(
+  $q,
+  $http,
+  $window,
+  FirebaseUrl,
+  FBCreds
+) {
+  var config = {
+    apiKey: FBCreds.apiKey,
+    authDomain: FBCreds.authDomain
+  };
 
-	var config = {
-		apiKey: FBCreds.apiKey,
-		authDomain: FBCreds.authDomain
-	};
+  firebase.initializeApp(config);
+  var provider = new firebase.auth.GoogleAuthProvider();
 
-	firebase.initializeApp(config);
-	var provider = new firebase.auth.GoogleAuthProvider();
+  let currentUser = null;
 
-	let currentUser = null;
+  let isAuthenticated = () => {
+    return $q((resolve, reject) => {
+      firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+          currentUser = user.uid;
+          resolve(true);
+        } else {
+          //on logout need to set it back to null.
+          currentUser = null;
+          resolve(false);
+        }
+      });
+    });
+  };
 
-	let isAuthenticated = () => {
-		return $q( (resolve, reject) => {
-			firebase.auth().onAuthStateChanged( (user) => {
-				if(user) {
-					currentUser = user.uid;
-					resolve(true);
-				}
-				else { //on logout need to set it back to null.
-					currentUser = null;
-					resolve(false);
-				}
-			});
-		});
-	};
+  let loginUser = () => {
+    return $q((resolve, reject) => {
+      firebase
+        .auth()
+        .signInWithPopup(provider)
+        .then(data => {
+          currentUser = data.user.uid;
+          console.log("currentUser", currentUser);
+          resolve(data);
+        })
+        .catch(err => {
+          console.log("error loggin in", err.message);
+        });
+    });
+  };
 
-	let loginUser = () => {
-		return $q( (resolve, reject) => {
-			firebase.auth().signInWithPopup(provider)
-			.then( (data) => {
-				currentUser = data.user.uid;
-				console.log("currentUser", currentUser);
-				resolve(data);
-		  })
-		  .catch( (err) => {
-			console.log("error loggin in", err.message);
-		  });
-		});
-	  };
+  let userLoc = {};
 
-	let userLoc = {};
+  let locateUser = () => {
+    return $q((resolve, reject) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          userLoc.lat = position.coords.latitude;
+          userLoc.lng = position.coords.longitude;
+          resolve(userLoc);
+        });
+      } else {
+        console.log("Your browser does not seem to support geolocation!");
+      }
+    });
+  };
 
-	let locateUser = () => {
-		return $q( (resolve, reject) => {
-			if (navigator.geolocation) {
-		      navigator.geolocation.getCurrentPosition(function(position) {
-				    userLoc.lat = position.coords.latitude;
-				    userLoc.lng = position.coords.longitude;
-		      	 resolve(userLoc);
-				});
-			} else {
-				console.log("Your browser does not seem to support geolocation!");
-			}
-	    });
-	};
+  let getDay = () => {
+    //0 is Sunday in this model, but I want 0 to be Mon and 6 to be Sun
+    let today = null;
+    var d = new Date();
+    var n = d.getDay();
+    if (n !== 0) {
+      today = n - 1;
+    } else {
+      today = 6;
+    }
+    return today;
+  };
 
-	let getDay = () => {
-		//0 is Sunday in this model, but I want 0 to be Mon and 6 to be Sun
-		let today=null;
-		var d = new Date();
-		var n = d.getDay();
-		if (n !== 0) {
-			today = n-1;
-		} else {
-			today = 6;
-		}
-		return today;
-	};
+  let getUser = () => {
+    return currentUser;
+  };
 
-	let getUser = () => {
-		return currentUser;
-	};
+  let logoutUser = () => {
+    return firebase
+      .auth()
+      .signOut()
+      .catch(err => {
+        console.log("Error logging out", err.message);
+      });
+  };
 
-	let logoutUser = () => {
-		return firebase.auth().signOut()
-		.catch( (err) => {
-			console.log("Error logging out", err.message);
-		});
-	};
+  let getUserRadius = () => {
+    return $q((resolve, reject) => {
+      $http
+        .get(`${FirebaseUrl}radius.json?orderBy="uid"&equalTo="${currentUser}"`)
+        .then(data => {
+          resolve(data.data);
+        });
+    });
+  };
 
+  let updateUserRad = (currentUserRadiusFBkey, userRadObj) => {
+    return $q((resolve, reject) => {
+      $http
+        .put(
+          `${FirebaseUrl}radius/${currentUserRadiusFBkey}.json`,
+          angular.toJson(userRadObj)
+        )
+        .then(response => {
+          console.log("radius PUTed to fb", response);
+          resolve(response);
+        })
+        .catch(err => reject(err));
+    });
+  };
 
-	
+  let postNewUserRad = userRadObj => {
+    return $q((resolve, reject) => {
+      $http
+        .post(`${FirebaseUrl}radius.json`, angular.toJson(userRadObj))
+        .then(response => {
+          console.log("radius POSTed to fb");
+          resolve(response);
+        })
+        .catch(err => reject(err));
+    });
+  };
 
-return { loginUser, isAuthenticated, getUser, logoutUser, locateUser, getDay };
+  // let saveUserRadius = userRad => {
+  //   //save object to FB with uid and radius (in miles??) ---
+  //   //also, how to differentiate between updating and adding for first time
+  //   if (currentUser) {
+  //     let userRadObj = {
+  //       uid: currentUser,
+  //       userRadius: userRad
+  //     };
+  //     getUserRadius().then(data => {
+  //       let currentUserRadiusFBkey = Object.keys(data)[0];
+  //       if (Object.keys(data)[0]) {
+  //         updateUserRad(currentUserRadiusFBkey, userRadObj).then(response => {
+  //         });
+  //       } else {
+  //         postNewUserRad(userRadObj)
+  //           .then(data => {
+  //           })
+  //           .catch(err => {
+  //             console.log("error", err);
+  //           });
+  //       }
+  //     });
+  //   } else {
+  //     alert("You must be signed in!");
+  //   }
+  // };
 
+  return {
+    getUserRadius,
+    postNewUserRad,
+    updateUserRad,
+    loginUser,
+    isAuthenticated,
+    getUser,
+    logoutUser,
+    locateUser,
+    getDay
+  };
 });

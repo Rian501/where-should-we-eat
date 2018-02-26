@@ -9,7 +9,6 @@ eatsApp.controller('BlacklistEditController', function ($scope, $window, $routeP
 
 
 	$scope.removeFromBlacklist = (FBid) => {
-		console.log("item to remove", FBid);
 		SuggestionsFactory.removeFromBlacklist(FBid)
 		.then( (response) => {
 			$window.location.reload();

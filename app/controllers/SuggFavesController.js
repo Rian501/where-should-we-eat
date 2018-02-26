@@ -10,7 +10,6 @@ eatsApp.controller('SuggestionsFavesController', function ($scope, $window, $rou
 
 	
 	$scope.removeFromSaved = (FBid) => {
-		console.log("item to remove", FBid);
 		SuggestionsFactory.removeFromSavelist(FBid)
 		.then( (response) => {
 			$window.location.reload();
@@ -18,7 +17,6 @@ eatsApp.controller('SuggestionsFavesController', function ($scope, $window, $rou
 	};
 
 	$scope.goToThere = (place_id) => {
-		console.log("place_id?", place_id);
 		$window.location.href = `#!/done/${place_id}`;  
 	};
 

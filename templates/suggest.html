@@ -1,133 +1,157 @@
-	<div ng-include="'templates/userNav.html'"></div>
-	<div ng-init="initSuggestionsArray(radius)"></div>
- <div class="m-app-loading" ng-animate-children>
+<div ng-include="'templates/userNav.html'"></div>
+<div ng-init="initSuggestionsArray(radius)"></div>
+<div class="m-app-loading" ng-animate-children>
 
-        <!-- adjusted from https://codepen.io/anon/pen/KpGryb.html
+  <!-- adjusted from https://codepen.io/anon/pen/KpGryb.html
             HACKY CODE WARNING: I'm putting Style block inside directive so that it
             will be removed from the DOM when we remove the directive container.
         -->
-        <style type="text/css">
-            div.m-app-loading {
-                position: fixed ;
-            }
-            div.m-app-loading div.animated-container {
-                background-color: #f0e6e1;
-                bottom: 0px ;
-                left: 0px ;
-                opacity: 1.0 ;
-                position: fixed ;
-                right: 0px ;
-                top: 0px ;
-                z-index: 999999 ;
-            }
-            /* Used to initialize the ng-leave animation state. */
-            div.m-app-loading div.animated-container.ng-leave {
-                opacity: 1.0 ;
-                transition: all linear 200ms ;
-                    -webkit-transition: all linear 200ms ;
-            }
-            /* Used to set the end properties of the ng-leave animation state. */
-            div.m-app-loading div.animated-container.ng-leave-active {
-                opacity: 0 ;
-            }
-            div.m-app-loading div.messaging {
-                color: #06717d ;
-                font-family: 'Caveat Brush';
-                left: 0px ;
-                margin-top: -37px ;
-                position: absolute ;
-                right: 0px ;
-                text-align: center ;
-                top: 50% ;
-            }
-            div.m-app-loading h1 {
-                font-size: 26px ;
-                line-height: 35px ;
-                margin: 0px 0px 20px 0px ;
-            }
-            div.m-app-loading p {
-                font-size: 18px ;
-                line-height: 14px ;
-                margin: 0px 0px 0px 0px ;
-            }
-        </style>
+  <style type="text/css">
+    div.m-app-loading {
+      position: fixed;
+    }
+
+    div.m-app-loading div.animated-container {
+      background-color: #f0e6e1;
+      bottom: 0px;
+      left: 0px;
+      opacity: 1.0;
+      position: fixed;
+      right: 0px;
+      top: 0px;
+      z-index: 999999;
+    }
+
+    /* Used to initialize the ng-leave animation state. */
+
+    div.m-app-loading div.animated-container.ng-leave {
+      opacity: 1.0;
+      transition: all linear 200ms;
+      -webkit-transition: all linear 200ms;
+    }
+
+    /* Used to set the end properties of the ng-leave animation state. */
+
+    div.m-app-loading div.animated-container.ng-leave-active {
+      opacity: 0;
+    }
+
+    div.m-app-loading div.messaging {
+      color: #06717d;
+      font-family: 'Caveat Brush';
+      left: 0px;
+      margin-top: -37px;
+      position: absolute;
+      right: 0px;
+      text-align: center;
+      top: 50%;
+    }
+
+    div.m-app-loading h1 {
+      font-size: 26px;
+      line-height: 35px;
+      margin: 0px 0px 20px 0px;
+    }
+
+    div.m-app-loading p {
+      font-size: 18px;
+      line-height: 14px;
+      margin: 0px 0px 0px 0px;
+    }
+  </style>
 
 
-        <!-- BEGIN: Actual animated container. -->
-        <div class="animated-container" ng-hide="defReady()">
+  <!-- BEGIN: Actual animated container. -->
+  <div class="animated-container" ng-hide="defReady()">
 
-            <div class="messaging">
+    <div class="messaging">
 
-                <h1>
-                    Finding your location...
-                </h1>
+      <h1>
+        Finding your location...
+      </h1>
 
-                <p>
-                    Please stand by while we check on what eateries are open near you!
-                </p>
-
-            </div>
-
-        </div>
-        <!-- END: Actual animated container. -->
+      <p>
+        Please stand by while we check on what eateries are open near you!
+      </p>
 
     </div>
-    <!-- END: App-Loading Screen. -->
+
+  </div>
+  <!-- END: Actual animated container. -->
+
+</div>
+<!-- END: App-Loading Screen. -->
 
 
-	<div class="container" ng-show="defReady()">
-		
-		<div data-place-id={{currentSuggestion.id}} class="container justify-content-center align-items-center">
-			<h1 class="caveat-font">{{currentSuggestion.name}}</h1>
-			<h4>Address: {{currentSuggestion.vicinity}}</h4>
-			<div class="row h-100 justify-content-center align-items-center">
-				<img class="image-fluid restaurant-photo" src="{{currentSuggestion.photoUrl}}" alt="restaurant image">
-			</div>
-			<div class="row justify-content-between">
-				<div class="col-6">
-<!-- 					<p>Price level: {{currentSuggestion.price_level}}</p>
- -->					<p>Price level: <span class="bold">{{currentSuggestion.price}}</span></p>
-				</div>
+<div class="container" ng-show="defReady()">
 
-				<div class="col-6">
-					<p>Avg Rating: {{currentSuggestion.rating}}</p>
-<!-- 					<p>Avg. Rating:</p><div ng-bind-html="thisCanBeusedInsideNgBindHtml"></div>
- -->				</div>
-				
-			</div>
-			<div class="row more-btn">
-				<button type="button" ng-click="moreInfo(); detailsOpen = !detailsOpen" class="btn btn-secondary btn-sm full-width"><i class="fa fa-angle-double-down" aria-hidden="true"></i>   More information please   <i class="fa fa-angle-double-down" aria-hidden="true"></i></button>
-			</div>
-		</div>
-	    <div ng-show="detailsOpen" class="container moreInfoDisplay">
-		    <p>Distance: On the roads, that's {{distance.text}}les, a drive of about {{duration.text}}.</p>
-	    	<p>Hours today--{{details.opening_hours.weekday_text[today]}}</p>
-	    	<a href="{{details.url}}" target="_blank"><p>Open with GoogleMaps</p></a>
-	    	<a href="{{details.website}}" target="_blank"><p>Restaurant Website</p></a>
-	    	<p>Phone: <a href="tel:{{details.international_phone_number}}">{{details.formatted_phone_number}}</a></p>
-	    	<div class="row more-btn">
-	    		<button type="button" ng-click="reviewsMoreInfo(); reviewsOpen = !reviewsOpen" class="btn btn-secondary btn-sm full-width"><i class="fa fa-angle-double-down" aria-hidden="true"></i>   Show User Reviews   <i class="fa fa-angle-double-down" aria-hidden="true"></i></button>
-	    	</div>
-	    	
-	    </div>
-        <div ng-show="reviewsOpen && detailsOpen" class="container yetmoreInfoDisplay">
-    	    <h3>User Reviews</h3>
-    	    <div class="separate" ng-repeat="review in reviews">
-    	    	<p><img class="review-pic" src="{{review.profile_photo_url}}">  Star rating: {{review.rating}}. {{review.text}}</p>
-    	    	<p>-<a href="author_url">{{review.author_name}}</a>, {{review.relative_time_description}}</p>
-    	    </div>
-        </div>
+  <div data-place-id={{currentSuggestion.id}} class="container justify-content-center align-items-center">
+    <h1 class="caveat-font">{{currentSuggestion.name}}</h1>
+    <h4>Address: {{currentSuggestion.vicinity}}</h4>
+    <div class="row h-100 justify-content-center align-items-center">
+      <img class="image-fluid restaurant-photo" src="{{currentSuggestion.photoUrl}}" alt="restaurant image">
+    </div>
+    <div class="row justify-content-between">
+      <div class="col-6">
+        <p>Price level:
+          <span class="bold">{{currentSuggestion.price}}</span>
+        </p>
+      </div>
+      <div class="col-6">
+        <p>Avg Rating: {{currentSuggestion.rating}}</p>
+      </div>
+    </div>
+    <div class="row more-btn">
+      <button type="button" ng-click="moreInfo(); detailsOpen = !detailsOpen" class="btn btn-secondary btn-sm full-width">
+        <i class="fa fa-angle-double-down" aria-hidden="true"></i> More information please
+        <i class="fa fa-angle-double-down" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+  <div ng-show="detailsOpen" class="container moreInfoDisplay">
+    <p>Distance: On the roads, that's {{distance.text}}les, a drive of about {{duration.text}}.</p>
+    <p>Hours today--{{details.opening_hours.weekday_text[today]}}</p>
+    <a href="{{details.url}}" target="_blank">
+      <p>Open with GoogleMaps</p>
+    </a>
+    <a href="{{details.website}}" target="_blank">
+      <p>Restaurant Website</p>
+    </a>
+    <p>Phone:
+      <a href="tel:{{details.international_phone_number}}">{{details.formatted_phone_number}}</a>
+    </p>
+    <div class="row more-btn">
+      <button type="button" ng-click="reviewsMoreInfo(); reviewsOpen = !reviewsOpen" class="btn btn-secondary btn-sm full-width">
+        <i class="fa fa-angle-double-down" aria-hidden="true"></i> Show User Reviews
+        <i class="fa fa-angle-double-down" aria-hidden="true"></i>
+      </button>
+    </div>
 
-	    <div class="row align-items-end buttons" ng-show="defReady()">
-			<button type="button" class="btn btn-warning btn-lg btn-block" ng-click="showNewSuggestion(); moreSuggestions(); rejectSuggestion()">Not today!</button>
-			<button ng-show="ifUser()" type="button" class="btn btn-danger btn-lg btn-block" ng-click="blacklistSuggestion(currentSuggestion.id, currentSuggestion.vicinity, currentSuggestion.name)">Never.</button>
-			<button ng-click="finishSession(currentSuggestion.place_id)" type="button" class="btn btn-success btn-lg btn-block">Yes!</button>
-			<button ng-show="ifUser()" ng-click="saveForLater(currentSuggestion.place_id, currentSuggestion.vicinity, currentSuggestion.name); rejectSuggestion()" type="button" class="btn btn-info btn-lg btn-block">Maybe next time.</button>
-            <button type="button" ng-click="radiusOpen = !radiusOpen" class="btn btn-secondary btn-sm full-width more-margin"><i class="fa fa-angle-double-down" aria-hidden="true"></i>   Change Radius   <i class="fa fa-angle-double-down" aria-hidden="true"></i></button>
-	    </div>
-    <div ng-show="radiusOpen">
-        <label for="userRadius">Enter your desired radius (in miles):</label>
-        <input type="number" id="userRadius" name="radius" ng-model="milesRadius">
-        <button class="btn btn-primary btn-sm" ng-click="changeRadius(milesRadius); initSuggestionsArray(radius)">Submit and search again</button>
-	</div>
+  </div>
+  <div ng-show="reviewsOpen && detailsOpen" class="container yetmoreInfoDisplay">
+    <h3>User Reviews</h3>
+    <div class="separate" ng-repeat="review in reviews">
+      <p>
+        <img class="review-pic" src="{{review.profile_photo_url}}"> Star rating: {{review.rating}}. {{review.text}}</p>
+      <p>-
+        <a href="author_url">{{review.author_name}}</a>, {{review.relative_time_description}}</p>
+    </div>
+  </div>
+
+  <div class="row align-items-end buttons" ng-show="defReady()">
+    <button type="button" class="btn btn-warning btn-lg btn-block" ng-click="showNewSuggestion(); moreSuggestions(); rejectSuggestion()">Not today!</button>
+    <button ng-show="ifUser()" type="button" class="btn btn-danger btn-lg btn-block" ng-click="blacklistSuggestion(currentSuggestion.id, currentSuggestion.vicinity, currentSuggestion.name)">Never.</button>
+    <button ng-click="finishSession(currentSuggestion.place_id)" type="button" class="btn btn-success btn-lg btn-block">Yes!</button>
+    <button ng-show="ifUser()" ng-click="saveForLater(currentSuggestion.place_id, currentSuggestion.vicinity, currentSuggestion.name); rejectSuggestion()"
+      type="button" class="btn btn-info btn-lg btn-block">Maybe next time.</button>
+    <!-- <button type="button" ng-click="radiusOpen = !radiusOpen" class="btn btn-secondary btn-sm full-width more-margin">
+      <i class="fa fa-angle-double-down" aria-hidden="true"></i> Change Radius
+      <i class="fa fa-angle-double-down" aria-hidden="true"></i>
+    </button> -->
+  </div>
+  <!-- <div ng-show="radiusOpen">
+    <label for="userRadius">Enter your desired radius (in miles):</label>
+    <input type="number" id="userRadius" name="radius" ng-model="milesRadius">
+    <button class="btn btn-primary btn-sm" ng-click="changeRadius(milesRadius); initSuggestionsArray(radius)">Submit and search again</button>
+  </div> -->
 </div>
