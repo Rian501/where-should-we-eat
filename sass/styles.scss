@@ -33,9 +33,13 @@ $whiteish: #f0e6e1;
 	font-family: $font-stack1;
 }
 
-.restaurant-photo {
-	max-height: 200px;
-	max-width: 100%;
+.maintain-size{
+	height:500px;
+}
+
+.restaurant-photo-div {
+	height: 283px;
+	width: 100%;
 }
 
 .review-pic {
@@ -45,6 +49,10 @@ $whiteish: #f0e6e1;
 .more-btn {
 	//width: 85%;
 	margin-bottom:5px;
+}
+
+.thin-border {
+	border: 1px solid black;
 }
 
 .full-width {
