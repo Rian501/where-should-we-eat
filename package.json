@@ -8,7 +8,8 @@
     "grunt-contrib-watch": "^0.6.1",
     "jshint": "^2.9.1",
     "jshint-stylish": "^2.1.0",
-    "matchdep": "^0.3.0"
+    "matchdep": "^0.3.0",
+    "qs": "^6.5.1"
   },
   "dependencies": {
     "angular": "^1.6.5",
