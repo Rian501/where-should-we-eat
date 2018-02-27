@@ -33,13 +33,22 @@ $whiteish: #f0e6e1;
 	font-family: $font-stack1;
 }
 
+.buttons {
+	z-index: 25;
+}
+
 .maintain-size{
-	height:500px;
+	height:78vh;
 }
 
 .restaurant-photo-div {
 	height: 283px;
 	width: 100%;
+}
+.restaurant-photo {
+	max-height: 270px;
+	width: 100%;
+	z-index: -20;
 }
 
 .review-pic {

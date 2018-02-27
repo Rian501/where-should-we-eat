@@ -84,7 +84,6 @@
 
 
 <div class="container" ng-show="defReady()">
-
   <div data-place-id={{currentSuggestion.id}} class="container justify-content-center align-items-center maintain-size">
     <h1 class="caveat-font">{{currentSuggestion.name}}</h1>
     <h4>Address: {{currentSuggestion.vicinity}}</h4>
@@ -93,13 +92,13 @@
     <div class="restaurant-photo-div" style="background-image: url({{currentSuggestion.photoUrl}}); background-size: cover;background-repeat: no-repeat; width: 100%;">
     </div>
     <!-- </div> -->
-    <div class="row justify-content-between">
-      <div class="col-6">
+    <div class="price-and-rating row justify-content-between">
+      <div class="price col-6">
         <p>Price level:
           <span class="bold">{{currentSuggestion.price}}</span>
         </p>
       </div>
-      <div class="col-6">
+      <div class="rating col-6">
         <p>Avg Rating: {{currentSuggestion.rating}}</p>
       </div>
     </div>
@@ -109,37 +108,37 @@
         <i class="fa fa-angle-double-down" aria-hidden="true"></i>
       </button>
     </div>
-  </div>
-  <div ng-show="detailsOpen" class="container moreInfoDisplay">
-    <p>Distance: On the roads, that's {{distance.text}}les, a drive of about {{duration.text}}.</p>
-    <p>Hours today--{{details.opening_hours.weekday_text[today]}}</p>
-    <a href="{{details.url}}" target="_blank">
-      <p>Open with GoogleMaps</p>
-    </a>
-    <a href="{{details.website}}" target="_blank">
-      <p>Restaurant Website</p>
-    </a>
-    <p>Phone:
-      <a href="tel:{{details.international_phone_number}}">{{details.formatted_phone_number}}</a>
-    </p>
-    <div class="row more-btn">
-      <button type="button" ng-click="reviewsMoreInfo(); reviewsOpen = !reviewsOpen" class="btn btn-secondary btn-sm full-width">
-        <i class="fa fa-angle-double-down" aria-hidden="true"></i> Show User Reviews
-        <i class="fa fa-angle-double-down" aria-hidden="true"></i>
-      </button>
-    </div>
 
-  </div>
-  <div ng-show="reviewsOpen && detailsOpen" class="container yetmoreInfoDisplay">
-    <h3>User Reviews</h3>
-    <div class="separate" ng-repeat="review in reviews">
-      <p>
-        <img class="review-pic" src="{{review.profile_photo_url}}"> Star rating: {{review.rating}}. {{review.text}}</p>
-      <p>-
-        <a href="author_url">{{review.author_name}}</a>, {{review.relative_time_description}}</p>
+    <div ng-show="detailsOpen" class="container moreInfoDisplay">
+      <p>Distance: On the roads, that's {{distance.text}}les, a drive of about {{duration.text}}.</p>
+      <p>Hours today--{{details.opening_hours.weekday_text[today]}}</p>
+      <a href="{{details.url}}" target="_blank">
+        <p>Open with GoogleMaps</p>
+      </a>
+      <a href="{{details.website}}" target="_blank">
+        <p>Restaurant Website</p>
+      </a>
+      <p>Phone:
+        <a href="tel:{{details.international_phone_number}}">{{details.formatted_phone_number}}</a>
+      </p>
+      <div class="row more-btn">
+        <button type="button" ng-click="reviewsMoreInfo(); reviewsOpen = !reviewsOpen" class="btn btn-secondary btn-sm full-width">
+          <i class="fa fa-angle-double-down" aria-hidden="true"></i> Show User Reviews
+          <i class="fa fa-angle-double-down" aria-hidden="true"></i>
+        </button>
+      </div>
+
+    </div>
+    <div ng-show="reviewsOpen && detailsOpen" class="container yetmoreInfoDisplay">
+      <h3>User Reviews</h3>
+      <div class="separate" ng-repeat="review in reviews">
+        <p>
+          <img class="review-pic" src="{{review.profile_photo_url}}"> Star rating: {{review.rating}}. {{review.text}}</p>
+        <p>-
+          <a href="author_url">{{review.author_name}}</a>, {{review.relative_time_description}}</p>
+      </div>
     </div>
   </div>
-
   <div class="row align-items-end buttons" ng-show="defReady()">
     <button type="button" class="btn btn-info btn-lg btn-block" ng-click="showNewSuggestion(); moreSuggestions(); rejectSuggestion()">Not today!</button>
     <button ng-show="ifUser()" type="button" class="btn btn-danger btn-lg btn-block" ng-click="blacklistSuggestion(currentSuggestion.id, currentSuggestion.vicinity, currentSuggestion.name)">Never.</button>
