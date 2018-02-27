@@ -1,29 +1,29 @@
-<nav ng-controller="NavController" class="navbar navbar-toggleable-md navbar-light bg-faded" style="background-color: #f0e6e1">
+<nav ng-controller="NavController" class="navbar navbar-expand-lg navbar-light bg-faded" style="background-color: #f0e6e1">
   <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <a class="navbar-brand caveat-font" href="#">¯\_(シ)_/¯</a>
   <div class="collapse navbar-collapse" id="navbarText">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
+      <li class="nav-item fakelink active">
         <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item fakelink">
         <a class="nav-link" data-toggle="modal" data-target="#myModal" ng-click="showAbout = !showAbout">About the app</a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item fakelink">
         <a class="nav-link" ng-show="getUser()" href='#!/user/faves' ng-click="goFaves()">Favorites</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" ng-show="getUser()" href='#!/radius'>Radius</a>
+      <li class="nav-item fakelink">
+        <a class="nav-link" href='#!/radius'>Radius</a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item fakelink">
         <a class="nav-link" ng-show="getUser()" href='#!/user/edit' ng-click="goBList()">Blacklist</a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item fakelink">
         <a ng-hide="getUser()" class="nav-link" ng-click="loginUser()">Register/Log In</a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item fakelink">
         <a class="nav-link" ng-show="getUser()" ng-click="logout()">Log out</a>
       </li>
     </ul>

@@ -3,28 +3,36 @@ module.exports = function(grunt) {
   grunt.initConfig({
     jshint: {
       options: {
-        predef: [ "document", "console", "$", "firebase", "alert", "navigator", "_" ],
+        predef: [
+          "document",
+          "console",
+          "$",
+          "firebase",
+          "alert",
+          "navigator",
+          "_"
+        ],
         esnext: true,
         globalstrict: true,
-        globals: {"angular": true, "eatsApp": true} //need to add app module's name
+        globals: { angular: true, eatsApp: true } //need to add app module's name
       },
-      files: ['./app/**/*.js']
+      files: ["./app/**/*.js"]
     },
     sass: {
       dist: {
         files: {
-          './css/main.css': './sass/styles.scss'
+          "./css/main.css": "./sass/styles.scss"
         }
       }
     },
     watch: {
       javascripts: {
-        files: ['./app/**/*.js'],
-        tasks: ['jshint']
+        files: ["./app/**/*.js"],
+        tasks: ["jshint"]
       },
       sass: {
-        files: ['./sass/**/*.scss'],
-        tasks: ['sass']
+        files: ["./sass/styles.scss"],
+        tasks: ["sass"]
       }
     }
   });
