@@ -11,6 +11,9 @@ eatsApp.controller("SuggestionsUserController", function(
   GoogleCreds
 ) {
   let suggestionsArray = [];
+  $scope.keywordsArr = ["Mexican", "Chinese", "pizza", "breakfast", "Italian", "healthy", "burger", "chicken", "salad", "sandwiches"];
+  //user should have the option to input (and save??) their own keywords if there is something they do or don't want, as a pref...
+  //these should generate buttons of things a user can click to say "NO" to or set in advance to "NEVER" to.
   let favesArray = [];
   let rejectsArray = [];
   let userLoc = {};
@@ -61,9 +64,13 @@ eatsApp.controller("SuggestionsUserController", function(
       console.log("radius?", $scope.radius);
       userLoc.lat = data.lat;
       userLoc.lng = data.lng;
-      return SuggestionsFactory.fetchAPISuggestions(userLoc.lat, userLoc.lng, $scope.radius).then(
+      return SuggestionsFactory.fetchAPISuggestions(userLoc.lat, userLoc.lng, $scope.radius, $scope.keywordsArr).then(
         results => {
-          suggestionsArray = results;
+          let suggArray = results.map( (results) => {
+            return results.data.results
+          });
+          let merged = [].concat.apply([], suggArray);
+          suggestionsArray = merged;
           checkSuggestions();
           $scope.showNewSuggestion();
         }
@@ -92,6 +99,7 @@ eatsApp.controller("SuggestionsUserController", function(
   let today = UserFactory.getDay();
 
   $scope.showNewSuggestion = () => {
+    console.log("suggestionsArray", suggestionsArray);
     let faveMatch = false;
     $scope.reviewsOpen = false;
     $scope.detailsOpen = false;
@@ -114,8 +122,7 @@ eatsApp.controller("SuggestionsUserController", function(
       $scope.currentSuggestion = suggestionsArray.slice(rando, rando + 1)[0];
       suggestionsArray.splice(rando, 1);
       $scope.currentSuggestion.price = dollarSigns();
-      console.log("suggestionsArray", suggestionsArray);
-      // console.log("current suggestion", $scope.currentSuggestion);
+      console.log("current suggestion", $scope.currentSuggestion);
       if ($scope.currentSuggestion.photos !== undefined) {
         let photoref = $scope.currentSuggestion.photos[0].photo_reference;
         $scope.currentSuggestion.photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=500&photoreference=${photoref}&key=${
@@ -216,7 +223,7 @@ eatsApp.controller("SuggestionsUserController", function(
     rejectsArray.forEach(function(item) {
       for (let i = 0; i < suggestionsArray.length; i++) {
         if (item.place_id == suggestionsArray[i].id) {
-          // console.log("what was cut?", suggestionsArray[i]);
+          console.log("what was cut?", suggestionsArray[i]);
           suggestionsArray.splice(i, i + 1);
         }
       }
