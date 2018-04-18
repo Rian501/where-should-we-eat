@@ -11,8 +11,7 @@ eatsApp.controller("SuggestionsUserController", function (
   GoogleCreds
 ) {
   let suggestionsArray = [];
-  let suggestionsArrayReal = [];
-  $scope.keywordsArr = ["Mexican", "Chinese", "pizza", "breakfast", "Italian", "healthy", "burger", "chicken", "salad", "sandwiches"];
+  $scope.keywordsArr = ["Mexican", "Chinese", "pizza", "breakfast", "Italian", "healthy", "burger", "chicken", "salad", "sandwiches", "pizza"];
   //user should have the option to input (and save??) their own keywords if there is something they do or don't want, as a pref...
   //these should generate buttons of things a user can click to say "NO" to or set in advance to "NEVER" to.
   let favesArray = [];
@@ -78,7 +77,7 @@ eatsApp.controller("SuggestionsUserController", function (
         });
         let merged = [].concat.apply([], suggArray);
         console.log("merged", merged);
-        suggestionsArray = _.uniqWith(merged, _.isEqual);
+        suggestionsArray = _.uniqBy(merged, 'id');
         console.log("suggs array, flattened with uniq", suggestionsArray);
         checkSuggestions();
         $scope.showNewSuggestion();
@@ -88,19 +87,6 @@ eatsApp.controller("SuggestionsUserController", function (
       })
   };
 
-  $scope.moreSuggestions = () => {
-    console.log('running moreSuggs()');
-    //add more suggestions to the possible suggestions array
-    if (suggestionsArray.length < 10) {
-      console.log('attempting to fetch more suggs');
-      SuggestionsFactory.fetchMoreSuggestions().then(data => {
-        //concat the next page of results
-        suggestionsArray = suggestionsArray.concat(data.results);
-        suggestionsArray = _.uniqWith(suggestionsArray, _.isEqual);
-        checkSuggestions();
-      });
-    }
-  };
 
   function generateRandom(array) {
     //pick a number between 0 and array length
@@ -116,17 +102,14 @@ eatsApp.controller("SuggestionsUserController", function (
     $scope.detailsOpen = false;
     $scope.radiusOpen = false;
     if (suggestionsArray.length === 0) {
-      // $window.alert(
-        //   "Picky picky! You have rejected all results. Please try again, or widen your radius."
-        // );
-        $window.location.href = "/#!/radius";
-      } else if (checkForFaves()) {
+      $window.location.href = "/#!/radius";
+    } else if (checkForFaves()) {
       console.log("checkfaves returned pos");
       faveMatch = checkForFaves();
       $scope.currentSuggestion = faveMatch;
       $scope.currentSuggestion.price = dollarSigns();
       // starSymbols();
-      
+
       //if a suggestion in the array matches something in the save for later array, push it to the current suggestion
     } else {
       checkSuggestions();
@@ -204,7 +187,7 @@ eatsApp.controller("SuggestionsUserController", function (
     let currentUser = UserFactory.getUser();
     SuggestionsFactory.getBlacklist(currentUser).then(listData => {
       rejectsArray = rejectsArray.concat(listData);
-      _.uniqWith(rejectsArray, _.isEqual);
+      _.uniqBy(rejectsArray, 'id');
     });
   }
 
@@ -226,9 +209,9 @@ eatsApp.controller("SuggestionsUserController", function (
     SuggestionsFactory.addToBlacklist(neverObj).then(response => {
       $scope.showNewSuggestion();
     });
-  }; 
+  };
 
-let filteredSuggestionsArray = [];
+  let filteredSuggestionsArray = [];
 
   function checkSuggestions() {
     rejectsArray.forEach(function (item) {
