@@ -1,6 +1,6 @@
 "use strict";
 
-eatsApp.controller("SuggestionsUserController", function(
+eatsApp.controller("SuggestionsUserController", function (
   $scope,
   $sce,
   $window,
@@ -11,6 +11,7 @@ eatsApp.controller("SuggestionsUserController", function(
   GoogleCreds
 ) {
   let suggestionsArray = [];
+  let suggestionsArrayReal = [];
   $scope.keywordsArr = ["Mexican", "Chinese", "pizza", "breakfast", "Italian", "healthy", "burger", "chicken", "salad", "sandwiches"];
   //user should have the option to input (and save??) their own keywords if there is something they do or don't want, as a pref...
   //these should generate buttons of things a user can click to say "NO" to or set in advance to "NEVER" to.
@@ -28,10 +29,10 @@ eatsApp.controller("SuggestionsUserController", function(
       });
     }
   };
-//set the radius to the saved user preference if there is one, or to the one temporarily set by the user in the radius screen
+  //set the radius to the saved user preference if there is one, or to the one temporarily set by the user in the radius screen
   setRadius();
 
-//to allow the template to test for user
+  //to allow the template to test for user
   $scope.ifUser = () => {
     if (UserFactory.getUser()) {
       return true;
@@ -40,7 +41,7 @@ eatsApp.controller("SuggestionsUserController", function(
     }
   };
 
-//allow for conditional on the template, to see if the first suggestion is ready to show
+  //allow for conditional on the template, to see if the first suggestion is ready to show
   $scope.defReady = () => {
     if ($scope.currentSuggestion) {
       return true;
@@ -59,28 +60,39 @@ eatsApp.controller("SuggestionsUserController", function(
 
   $scope.initSuggestionsArray = radius => {
     buildBlacklist();
-    UserFactory.locateUser().then(data => {
-      console.log("userLoc?", data);
-      console.log("radius?", $scope.radius);
-      userLoc.lat = data.lat;
-      userLoc.lng = data.lng;
-      return SuggestionsFactory.fetchAPISuggestions(userLoc.lat, userLoc.lng, $scope.radius, $scope.keywordsArr).then(
-        results => {
-          let suggArray = results.map( (results) => {
-            return results.data.results
-          });
-          let merged = [].concat.apply([], suggArray);
-          suggestionsArray = merged;
-          checkSuggestions();
-          $scope.showNewSuggestion();
-        }
-      );
-    });
+    UserFactory.locateUser()
+      .then(data => {
+        console.log("userLoc?", data);
+        console.log("radius?", $scope.radius);
+        userLoc.lat = data.lat;
+        userLoc.lng = data.lng;
+        return SuggestionsFactory.fetchAPISuggestions(userLoc.lat, userLoc.lng, $scope.radius, $scope.keywordsArr)
+      })
+      .then(results => {
+        results.forEach(result => {
+          console.log("the results right from the qall", result.data.results);
+
+        })
+        let suggArray = results.map((results) => {
+          return results.data.results
+        });
+        let merged = [].concat.apply([], suggArray);
+        console.log("merged", merged);
+        suggestionsArray = _.uniqWith(merged, _.isEqual);
+        console.log("suggs array, flattened with uniq", suggestionsArray);
+        checkSuggestions();
+        $scope.showNewSuggestion();
+      })
+      .catch(err => {
+        console.log("ERROR", err);
+      })
   };
 
   $scope.moreSuggestions = () => {
+    console.log('running moreSuggs()');
     //add more suggestions to the possible suggestions array
     if (suggestionsArray.length < 10) {
+      console.log('attempting to fetch more suggs');
       SuggestionsFactory.fetchMoreSuggestions().then(data => {
         //concat the next page of results
         suggestionsArray = suggestionsArray.concat(data.results);
@@ -99,22 +111,22 @@ eatsApp.controller("SuggestionsUserController", function(
   let today = UserFactory.getDay();
 
   $scope.showNewSuggestion = () => {
-    console.log("suggestionsArray", suggestionsArray);
     let faveMatch = false;
     $scope.reviewsOpen = false;
     $scope.detailsOpen = false;
     $scope.radiusOpen = false;
     if (suggestionsArray.length === 0) {
       // $window.alert(
-      //   "Picky picky! You have rejected all results. Please try again, or widen your radius."
-      // );
-      $window.location.href = "/#!/radius";
-    } else if (checkForFaves()) {
+        //   "Picky picky! You have rejected all results. Please try again, or widen your radius."
+        // );
+        $window.location.href = "/#!/radius";
+      } else if (checkForFaves()) {
+      console.log("checkfaves returned pos");
       faveMatch = checkForFaves();
       $scope.currentSuggestion = faveMatch;
       $scope.currentSuggestion.price = dollarSigns();
       // starSymbols();
-
+      
       //if a suggestion in the array matches something in the save for later array, push it to the current suggestion
     } else {
       checkSuggestions();
@@ -123,11 +135,12 @@ eatsApp.controller("SuggestionsUserController", function(
       suggestionsArray.splice(rando, 1);
       $scope.currentSuggestion.price = dollarSigns();
       console.log("current suggestion", $scope.currentSuggestion);
+      console.log("suggestionsArray", suggestionsArray);
       if ($scope.currentSuggestion.photos !== undefined) {
         let photoref = $scope.currentSuggestion.photos[0].photo_reference;
         $scope.currentSuggestion.photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=500&photoreference=${photoref}&key=${
           GoogleCreds.PlacesApiKey
-        }`;
+          }`;
       } else {
         $scope.currentSuggestion.photoUrl = `../../lib/images/restaurant-1724294_640.png`;
       }
@@ -161,33 +174,29 @@ eatsApp.controller("SuggestionsUserController", function(
     });
   };
 
-  // $scope.morePhotos = () => {
-
-  // };
-
   $scope.reviewsMoreInfo = () => {
     $scope.reviews = $scope.details.reviews;
   };
 
-  
+
   function checkForFaves() {
     let fave;
     let currentUser = UserFactory.getUser();
     SuggestionsFactory.getSavedlist(currentUser)
-    .then(listData => {
-      favesArray = favesArray.concat(listData);
-      favesArray.forEach(function(item) {
-        for (let i = 0; i < suggestionsArray.length; i++) {
-          if (item.place_id == suggestionsArray[i].id) {
-            console.log("favedetector?", suggestionsArray[i]);
-            fave = suggestionsArray[i];
-          } else {
-            return false;
+      .then(listData => {
+        favesArray = favesArray.concat(listData);
+        favesArray.forEach(function (item) {
+          for (let i = 0; i < suggestionsArray.length; i++) {
+            if (item.place_id == suggestionsArray[i].id) {
+              console.log("favedetector?", suggestionsArray[i]);
+              fave = suggestionsArray[i];
+            } else {
+              return false;
+            }
           }
-        }
+        });
+        return fave;
       });
-      return fave;
-    });
     return fave;
   }
 
@@ -217,18 +226,20 @@ eatsApp.controller("SuggestionsUserController", function(
     SuggestionsFactory.addToBlacklist(neverObj).then(response => {
       $scope.showNewSuggestion();
     });
-  };
+  }; 
+
+let filteredSuggestionsArray = [];
 
   function checkSuggestions() {
-    rejectsArray.forEach(function(item) {
+    rejectsArray.forEach(function (item) {
       for (let i = 0; i < suggestionsArray.length; i++) {
         if (item.place_id == suggestionsArray[i].id) {
           console.log("what was cut?", suggestionsArray[i]);
-          suggestionsArray.splice(i, i + 1);
+          suggestionsArray.splice(i, 1);
         }
       }
     });
-    checkForFaves();
+    // checkForFaves();
   }
 
   $scope.finishSession = place_id => {
